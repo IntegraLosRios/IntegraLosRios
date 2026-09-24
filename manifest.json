@@ -1,26 +1,48 @@
 {
-  "name": "Jardines Integra Los Ríos",
+  "name": "Jardines Integra · Región de Los Ríos",
   "short_name": "Integra Los Ríos",
-  "description": "Directorio de Jardines Infantiles Integra Región de Los Ríos",
+  "description": "Directorio de salas cuna y jardines infantiles de Fundación Integra en la Región de Los Ríos",
+  "id": "./",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#005f9e",
+  "background_color": "#F4F1EB",
+  "theme_color": "#2F5FAF",
   "orientation": "portrait-primary",
   "icons": [
     {
       "src": "icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     }
   ],
-  "categories": ["education", "kids"],
-  "lang": "es-CL"
+  "categories": [
+    "education",
+    "kids"
+  ],
+  "lang": "es-CL",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
+  "shortcuts": [
+    {
+      "name": "Jardines de Valdivia",
+      "short_name": "Valdivia",
+      "url": "./index.html#comuna=Valdivia",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
 }

@@ -1,447 +1,806 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es-CL">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jardines Integra Los Ríos</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Jardines Integra · Región de Los Ríos</title>
+<meta name="description" content="Directorio de salas cuna y jardines infantiles de Fundación Integra en la Región de Los Ríos: ubicación, contacto, jornada y sello PEI de cada establecimiento.">
 
 <!-- PWA -->
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#5587D4">
+<meta name="theme-color" content="#2F5FAF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E1526" media="(prefers-color-scheme: dark)">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Integra Los Ríos">
-<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+<!-- Rendimiento: la imagen de inicio se pide antes que todo lo demás -->
+<link rel="preload" as="image" href="img/inicio-720.webp" type="image/webp"
+      imagesrcset="img/inicio-720.webp 720w, img/inicio.webp 1080w" imagesizes="(max-width: 720px) 100vw, 560px" fetchpriority="high">
+
+<!-- Tipografías redondeadas alojadas en el mismo sitio (sin depender de Google,
+     funcionan sin conexión y no bloquean la carga en redes móviles lentas) -->
+<link rel="preload" href="fonts/nunito.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/baloo2.woff2" as="font" type="font/woff2" crossorigin>
+
+<!-- Tema guardado: se aplica antes de pintar para evitar parpadeo -->
+<script>
+  try { var t = localStorage.getItem("tema"); if (t === "dark" || t === "light") document.documentElement.dataset.theme = t; } catch (e) {}
+  document.documentElement.classList.add("js", "splash-on");
+  if (t) document.querySelectorAll('meta[name="theme-color"]').forEach(function (m) { m.content = t === "dark" ? "#0E1526" : "#2F5FAF"; });
+</script>
+
 <style>
-
-/* =============================================
-   VARIABLES Y TEMA
-   ============================================= */
+@font-face {
+  font-family: "Nunito"; font-style: normal; font-weight: 200 1000; font-display: swap;
+  src: url("fonts/nunito.woff2") format("woff2-variations"), url("fonts/nunito.woff2") format("woff2");
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face {
+  font-family: "Baloo 2"; font-style: normal; font-weight: 400 800; font-display: swap;
+  src: url("fonts/baloo2.woff2") format("woff2-variations"), url("fonts/baloo2.woff2") format("woff2");
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+/* =============================================================
+   PALETA INSTITUCIONAL INTEGRA
+   Colores de la gráfica oficial (piezas de difusión y logotipo).
+   Los tonos "-ink" son versiones más profundas para texto y
+   botones, de modo que cumplan contraste de lectura (WCAG AA).
+   ============================================================= */
 :root {
-  --bg:      #ECE8E0;
-  --card:    #fff;
-  --text:    #333;
-  --accent:  #5587D4;
-  --btn:     #5587D4;
-  --purple:  #B075AE;
-  --pink:    #EB79A7;
-  --green:   #4DB38B;
-  --orange:  #FFA455;
+  /* Gráfica de difusión */
+  --i-azul:     #5587D4;
+  --i-verde:    #4DB38B;
+  --i-rosado:   #EB79A7;
+  --i-morado:   #B075AE;
+  --i-naranjo:  #FFA455;
+  --i-arena:    #ECE8E0;
+  /* Logotipo */
+  --logo-rojo:     #E3262B;
+  --logo-amarillo: #FFCD00;
+  --logo-azul:     #1D5FAD;
+  --logo-verde:    #6AB23E;
+
+  /* Tonos para texto / botones */
+  --azul-ink:   #2F5FAF;
+  --verde-ink:  #1E7453;
+  --rosado-ink: #A83F6E;
+  --morado-ink: #8E4F8C;
+  --naranjo-ink:#A8571A;
+
+  /* Superficies (tema claro) */
+  --bg:        #F4F1EB;
+  --surface:   #FFFFFF;
+  --surface-2: #F8F6F2;
+  --line:      #E4DED3;
+  --text:      #1F2A44;
+  --muted:     #5A6478;
+  --primary:   var(--azul-ink);
+  --primary-contrast: #FFFFFF;
+  --on-ink: #FFFFFF;           /* texto sobre botones de color */
+  --shadow-sm: 0 1px 2px rgba(31,42,68,.06), 0 2px 8px rgba(31,42,68,.06);
+  --shadow-md: 0 4px 14px rgba(31,42,68,.10), 0 12px 32px rgba(31,42,68,.08);
+  --radius:    18px;
+  --font-head: "Baloo 2", "Nunito", system-ui, sans-serif;
+  --font-body: "Nunito", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  color-scheme: light;
 }
-body.dark {
-  --bg:    #000;
-  --card:  #1a1a1a;
-  --text:  #eaeaea;
-  --accent:#FFA455;
-  --btn:   #FFA455;
+/* Tema oscuro: por preferencia del sistema o elegido por la persona */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:#0E1526; --surface:#172039; --surface-2:#1C2744; --line:#2A3656;
+    --text:#E9EDF5; --muted:#A5AFC4; --primary:#8FB3F0; --primary-contrast:#0E1526; --on-ink:#0E1526;
+    --azul-ink:#8FB3F0; --verde-ink:#7FD3AE; --rosado-ink:#F4A3C3; --morado-ink:#D2A6D0; --naranjo-ink:#FFBF85;
+    --shadow-sm:0 1px 2px rgba(0,0,0,.3); --shadow-md:0 8px 28px rgba(0,0,0,.35);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:#0E1526; --surface:#172039; --surface-2:#1C2744; --line:#2A3656;
+  --text:#E9EDF5; --muted:#A5AFC4; --primary:#8FB3F0; --primary-contrast:#0E1526; --on-ink:#0E1526;
+  --azul-ink:#8FB3F0; --verde-ink:#7FD3AE; --rosado-ink:#F4A3C3; --morado-ink:#D2A6D0; --naranjo-ink:#FFBF85;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.3); --shadow-md:0 8px 28px rgba(0,0,0,.35);
+  color-scheme: dark;
 }
 
-/* =============================================
+/* =============================================================
    BASE
-   ============================================= */
-* { box-sizing: border-box; margin: 0; padding: 0; }
+   ============================================================= */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: 150px; }
 body {
-  font-family: Arial, sans-serif;
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
   background: var(--bg);
   color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;          /* sin retardo al tocar */
+  overscroll-behavior-y: none;
 }
+html.splash-on body { overflow: hidden; }
+img { max-width: 100%; display: block; }
+a { color: var(--primary); }
+button { font: inherit; color: inherit; }
+.sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+.wrap { max-width: 1240px; margin: 0 auto; padding: 0 16px; }
+.ico { width: 1em; height: 1em; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+:focus-visible { outline: 3px solid var(--i-naranjo); outline-offset: 2px; border-radius: 8px; }
 
-/* =============================================
-   BANNER SUPERIOR — 100% responsive sin franjas
-   La imagen siempre llena el espacio con cover.
-   ============================================= */
-.topbanner {
-  width: 100%;
+/* =============================================================
+   PANTALLA DE INICIO (se difumina sola)
+   ============================================================= */
+.splash {
+  position: fixed; inset: 0; z-index: 100000;
+  display: grid; place-items: center;
+  background: var(--i-arena);
   overflow: hidden;
-  background: #111;
+  transition: opacity .7s ease, transform .7s ease, visibility 0s linear .7s;
+  will-change: opacity, transform;
 }
+/* Fondo ya desenfocado (1 KB incrustado): aparece al instante y no exige
+   al procesador gráfico del celular como un filtro blur en vivo */
+.splash-bg {
+  position: absolute; inset: 0;
+  background: url("data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA4KCw0LCQ4NDA0QDw4RFiQXFhQUFiwgIRokNC43NjMuMjI6QVNGOj1OPjIySGJJTlZYXV5dOEVmbWVabFNbXVn/2wBDAQ8QEBYTFioXFypZOzI7WVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVn/wAARCAB4AGADASIAAhEBAxEB/8QAGwAAAgMBAQEAAAAAAAAAAAAAAwQAAgUBBgf/xAAjEAACAgEEAgMBAQAAAAAAAAAAAQIDEQQSEzEhYQUUUUEy/8QAGgEAAwEBAQEAAAAAAAAAAAAAAQIDAAQFBv/EABwRAAMBAQEAAwAAAAAAAAAAAAABAhESAxMhMf/aAAwDAQACEQMRAD8AM5g5XbSs3hCN9uMkSiemhDWJPseo1KnjyeTle1Ls0/jrnKS8jpitHp4VciCfU9F9C04LJoLaP8mIVTj0zo6XD6HKK9oZJMukkS3WXfo2sO5wgcn5Ly6BPsFggJAYgLwDxYIBZ81uv8GbffnPkJduwZ1reSjIebZffmRsfGf6RhV+ZG38e9uBSjZ6/SW7YIO9Vh9mJDU7YdlHq8y7A0BHpab939G4zWDz2k1GceTQ+ykuxpWAZoORUQjqk32N1T3IZpMKbQeIVSAo7kynAOtPn12nTT8GTqaMN+DdVimhe+jf/CHTL8Iw6anuNfTLbE5XpGpdDsaGo9DaK5AWWteCtc25BJ0NstXRgdfYv4O6axxSDWah47FYraSWWK3gF9h6L259m5pLMxR52rxI1NPdtSDOsNNI3YzTLrDMyGo9jEL/AGP1hLNPn+ntbaNaiKmkZOmokpLwbmkg0kDlFF6YFhpl+BeBY6CxXgvjJnIy9EJSoWejnDj+Dzryc4zKQukxB1FeM0OE46fQedJ9JCChhhoZQZ1EUB0sJ1SZ2EmgqsaKRgwiqbOT1eMyYvX8Zh9Dlej2ro2OFfhHWjoC50y+DB1Uj8qymwZCciqqO8QxtJhBDjAcJHT6GUkd8A0PDEnp/RPreh7CJ4EdoPxNikdP6DRoQXKRN6JU0x58mNNo52LO72djadDRgzjkHKOC3IsA7LFgVvEZY2Ck8FN4K23yB5fJy16Vp1T5zg5vObxVWneQXumNxKGeQq7RZ2FHYTdUUUyNO0q7RZ2HOQm+iiUnfs5/oSGo9mWtwSLkfQ35o8Dtmp9j2VnfldiUWy2GzmpFpVHZ2ZB7mW2s5sJcIrtIimyOxk2FXBhUIDdHHayrsZbiZx1MZecg6so7Wc5iSqYKVbLz4QwV60jW+qvw6tN6IQZ0yalF1p/RbgIQizon8K8ROIhDB07xHOH0QhjaXVC/Dv11+EIKErLTL8BvSr8IQpNNErP/2Q==") center / cover no-repeat;
+  opacity: .6;
+}
+.splash picture { position: relative; z-index: 1; }
+.splash img {
+  max-height: 100vh; max-height: 100dvh;
+  max-width: min(100vw, 560px);
+  width: auto; height: auto;
+  object-fit: contain;
+  box-shadow: 0 20px 60px rgba(0,0,0,.25);
+  animation: splashIn .6s ease both;
+}
+@media (min-width: 721px) { .splash img { border-radius: 20px; max-height: calc(100dvh - 48px); } }
+.splash-bar {
+  position: absolute; left: 0; bottom: 0; z-index: 2; height: 5px; width: 100%;
+  background: linear-gradient(90deg, var(--logo-rojo), var(--logo-amarillo), var(--logo-verde), var(--logo-azul));
+  transform-origin: left; transform: scaleX(0);
+}
+.splash.run .splash-bar { animation: splashBar var(--splash-ms, 2000ms) linear forwards; }
+.splash-skip {
+  position: absolute; z-index: 2; right: 16px; bottom: calc(18px + env(safe-area-inset-bottom));
+  border: 0; border-radius: 999px; padding: 10px 18px;
+  background: rgba(255,255,255,.92); color: #1F2A44; font-weight: 800; font-size: 14px;
+  box-shadow: 0 4px 14px rgba(0,0,0,.18); cursor: pointer;
+}
+.splash.leaving { opacity: 0; transform: scale(1.04); visibility: hidden; pointer-events: none; }
+/* En computadores se agrega el efecto de difuminado */
+@media (min-width: 721px) and (hover: hover) {
+  .splash { transition: opacity .7s ease, transform .7s ease, filter .7s ease, visibility 0s linear .7s; }
+  .splash.leaving { filter: blur(12px); }
+}
+@keyframes splashIn  { from { opacity: 0; transform: scale(.97); } to { opacity: 1; transform: none; } }
+@keyframes splashBar { to { transform: scaleX(1); } }
 
-.topbanner img {
-  width: 100%;
-  height: auto;
-  display: block;
-}
+/* Mientras está la pantalla de inicio, el contenido espera detrás */
+html.splash-on .page { opacity: 0; }
+.page { transition: opacity .6s ease .1s; }
 
-/* =============================================
-   MENÚ DE COMUNAS
-   ============================================= */
-.topmenu {
-  display: flex;
-  gap: 10px;
-  overflow-x: auto;
-  padding: 12px;
-  margin-top: 0;
-  border-bottom: 1px solid rgba(255,255,255,0.2);
-  background: rgba(255,255,255,0.3);
-  backdrop-filter: blur(12px);
+/* =============================================================
+   CABECERA
+   ============================================================= */
+.hero-banner { background: #FFCD00; }
+.hero-banner img { width: 100%; height: auto; aspect-ratio: 4 / 1; object-fit: cover; }
+.stripe { height: 6px; display: flex; }
+.stripe span { flex: 1; }
+.stripe span:nth-child(1) { background: var(--logo-rojo); }
+.stripe span:nth-child(2) { background: var(--logo-amarillo); }
+.stripe span:nth-child(3) { background: var(--logo-verde); }
+.stripe span:nth-child(4) { background: var(--logo-azul); }
+
+/* Presentación: en computador, texto+indicadores y Reconocimiento Oficial
+   van lado a lado; en celular se apilan en formato compacto */
+.intro {
+  padding-top: 24px; padding-bottom: 4px;
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; align-items: stretch;
 }
-.topmenu button {
-  background: var(--accent);
-  color: white;
-  border: 3px solid transparent;
-  padding: 12px 22px;
+.intro-text { min-width: 0; }
+@media (min-width: 1000px) {
+  .intro { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 28px; padding-top: 30px; }
+}
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-weight: 800; font-size: 13px; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--verde-ink);
+}
+.eyebrow::before { content: ""; width: 22px; height: 4px; border-radius: 4px; background: var(--i-verde); }
+h1 {
+  font-family: var(--font-head); font-weight: 800;
+  font-size: clamp(26px, 4.2vw, 44px); line-height: 1.05;
+  margin: 6px 0 8px; letter-spacing: -.01em;
+}
+h1 .accent { color: var(--azul-ink); }
+.lead { margin: 0; max-width: 62ch; color: var(--muted); font-size: 16.5px; }
+@media (max-width: 600px) { .lead { font-size: 15px; line-height: 1.45; } .eyebrow { font-size: 11.5px; } }
+
+/* Indicadores */
+.stats {
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px;
+  margin: 18px 0 0;
+}
+.stat {
+  min-width: 0;
+  display: flex; flex-direction: column; justify-content: center; gap: 4px;
+  background: var(--surface); border-radius: 14px; padding: 10px 12px;
+  box-shadow: var(--shadow-sm); border-left: 5px solid var(--c, var(--i-azul));
+}
+.stat b { font-family: var(--font-head); font-weight: 800; font-size: 28px; line-height: 1; color: var(--c-ink, var(--azul-ink)); }
+.stat span { font-size: 13px; line-height: 1.2; color: var(--muted); font-weight: 700; }
+@media (max-width: 720px) { .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 14px; } .stat b { font-size: 24px; } .stat span { font-size: 12.5px; } }
+
+/* =============================================================
+   RECONOCIMIENTO OFICIAL
+   ============================================================= */
+.ro {
+  margin: 0; min-width: 0;
+  display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 18px; align-items: center;
+  padding: 20px 22px;
   border-radius: 22px;
-  font-weight: bold;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: .35s;
+  background:
+    radial-gradient(120% 140% at 0% 0%, rgba(85,135,212,.14), transparent 60%),
+    radial-gradient(120% 140% at 100% 100%, rgba(235,121,167,.14), transparent 60%),
+    var(--surface);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--line);
+  position: relative; overflow: hidden;
 }
-body:not(.dark) .topmenu button:hover { background: var(--pink); }
-body.dark       .topmenu button:hover { background: var(--green); color: #000; }
-.topmenu button.active                { background: var(--purple); border-color: var(--pink); }
-body.dark .topmenu button.active      { background: var(--orange); border-color: var(--pink); color: #000; }
-
+.ro-seal { width: 112px; height: 112px; border-radius: 50%; background: #fff; box-shadow: 0 6px 20px rgba(31,42,68,.18); }
+.ro-kicker { font-weight: 800; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--rosado-ink); margin: 0 0 4px; }
+.ro h2 { font-family: var(--font-head); font-weight: 800; font-size: clamp(18px, 2.2vw, 24px); line-height: 1.15; margin: 0 0 6px; }
+.ro h2 .pct { color: var(--azul-ink); }
+.ro-more p { margin: 0; color: var(--muted); font-size: 14.5px; line-height: 1.5; }
+.ro-more summary {
+  display: inline-flex; align-items: center; gap: 4px; min-height: 32px;
+  cursor: pointer; font-weight: 800; font-size: 13.5px; color: var(--primary); list-style: none;
+}
+.ro-more summary::-webkit-details-marker { display: none; }
+.ro-more summary::after { content: "›"; transition: transform .2s; font-size: 18px; line-height: 1; }
+.ro-more[open] summary::after { transform: rotate(90deg); }
+.ro-more[open] summary { margin-bottom: 4px; }
+/* En computador el texto se muestra siempre */
+@media (min-width: 721px) { .ro-more summary { display: none; } }
+@media (min-width: 1000px) {
+  .intro { align-items: center; }
+  .ro { align-items: start; gap: 16px; padding: 20px; }
+  .ro-seal { width: 84px; height: 84px; }
+  .ro-more p { font-size: 14px; }
+}
 @media (max-width: 600px) {
-  .topmenu         { padding: 8px 6px; }
-  .topmenu button  { padding: 10px 14px; font-size: 14px; border-radius: 18px; }
+  .ro { gap: 14px; padding: 14px 16px; border-radius: 18px; }
+  .ro-seal { width: 72px; height: 72px; box-shadow: 0 3px 10px rgba(31,42,68,.16); }
+  .ro-kicker { display: none; }
+  .ro h2 { font-size: 16.5px; line-height: 1.2; margin: 0 0 2px; }
+  .ro-more p { font-size: 13.5px; }
 }
 
-/* =============================================
+/* =============================================================
+   BARRA DE BÚSQUEDA Y FILTROS (fija al hacer scroll)
+   ============================================================= */
+.toolbar {
+  position: sticky; top: 0; z-index: 50;
+  margin-top: 18px; padding: 12px 0 10px;
+  background: var(--bg);
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s, box-shadow .2s, transform .28s ease;
+}
+/* El efecto vidrio solo en pantallas grandes: en celulares cuesta batería y fluidez */
+@media (min-width: 721px) {
+  @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+    .toolbar {
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+      -webkit-backdrop-filter: saturate(1.4) blur(14px); backdrop-filter: saturate(1.4) blur(14px);
+    }
+  }
+}
+/* En celulares la barra se esconde al bajar y reaparece al subir */
+@media (max-width: 720px) {
+  .toolbar { padding: 10px 0 6px; padding-top: max(10px, env(safe-area-inset-top)); }
+  .toolbar.tb-hidden { transform: translateY(-100%); box-shadow: none; }
+}
+.toolbar.stuck { border-bottom-color: var(--line); box-shadow: 0 6px 18px rgba(31,42,68,.06); }
+.tb-row { display: flex; gap: 10px; align-items: center; }
+.search {
+  flex: 1; min-width: 0; position: relative;
+}
+.search .ico { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 19px; color: var(--muted); pointer-events: none; }
+.search input {
+  width: 100%; height: 48px; border-radius: 999px;
+  border: 2px solid var(--line); background: var(--surface); color: var(--text);
+  padding: 0 12px 0 44px; font: inherit; font-size: 16px;
+  transition: border-color .2s, box-shadow .2s;
+}
+.search input::placeholder { color: var(--muted); }
+.search input:focus { outline: none; border-color: var(--i-azul); box-shadow: 0 0 0 4px rgba(85,135,212,.2); }
+.search .clear {
+  position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+  width: 32px; height: 32px; border-radius: 50%; border: 0; background: var(--surface-2);
+  display: none; place-items: center; cursor: pointer; color: var(--muted);
+}
+.search.has-value .clear { display: grid; }
+.search.has-value input { padding-right: 44px; }
+.icon-btn {
+  width: 48px; height: 48px; flex: none; border-radius: 50%;
+  border: 2px solid var(--line); background: var(--surface); color: var(--text);
+  display: grid; place-items: center; cursor: pointer; font-size: 20px;
+  transition: background .2s, border-color .2s;
+}
+.icon-btn:hover { border-color: var(--i-azul); }
+.icon-btn .sun { display: none; }
+:root[data-theme="dark"] .icon-btn .sun { display: block; }
+:root[data-theme="dark"] .icon-btn .moon { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .icon-btn .sun { display: block; }
+  :root:not([data-theme="light"]) .icon-btn .moon { display: none; }
+}
+
+.pills {
+  display: flex; gap: 8px; overflow-x: auto; padding: 10px 2px 4px; margin: 0 -2px;
+  scrollbar-width: none; scroll-snap-type: x proximity;
+  overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch;
+  -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent);
+          mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent);
+}
+.pills::-webkit-scrollbar { display: none; }
+.pill {
+  flex: none; scroll-snap-align: start;
+  display: inline-flex; align-items: center; gap: 8px;
+  height: 40px; padding: 0 14px 0 16px; border-radius: 999px;
+  border: 2px solid var(--line); background: var(--surface); color: var(--text);
+  font-weight: 800; font-size: 14px; cursor: pointer; white-space: nowrap;
+  transition: background .18s, color .18s, border-color .18s, transform .18s;
+}
+.pill:hover { border-color: var(--pc, var(--i-azul)); }
+.pill:active { transform: scale(.97); }
+@media (max-width: 720px) { .pill { height: 44px; } .search input, .icon-btn { height: 46px; } .icon-btn { width: 46px; } }
+.icon-btn[aria-busy="true"] .ico { animation: spin 1s linear infinite; }
+.icon-btn[aria-pressed="true"] { background: var(--azul-ink); border-color: var(--azul-ink); color: var(--on-ink); }
+@keyframes spin { to { transform: rotate(360deg); } }
+.pill .n {
+  min-width: 24px; height: 24px; padding: 0 7px; border-radius: 999px;
+  display: grid; place-items: center; font-size: 12px;
+  background: var(--surface-2); color: var(--muted);
+}
+.pill[aria-pressed="true"] { background: var(--pc-ink, var(--azul-ink)); border-color: var(--pc-ink, var(--azul-ink)); color: var(--on-ink); }
+.pill[aria-pressed="true"] .n { background: rgba(0,0,0,.2); color: var(--on-ink); }
+.pill.toggle[aria-pressed="true"] { --pc-ink: var(--verde-ink); }
+.pill.toggle .ico { font-size: 16px; }
+.pills .sep { flex: none; width: 2px; margin: 8px 2px; border-radius: 2px; background: var(--line); }
+
+.results-bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 6px 12px; min-height: 44px; padding: 8px 0 2px; color: var(--muted); font-weight: 700; font-size: 14px; }
+.results-bar .right { display: flex; align-items: center; gap: 4px 10px; flex-wrap: wrap-reverse; justify-content: flex-end; margin-left: auto; }
+.results-bar .pill { height: 36px; font-size: 13px; padding: 0 12px; gap: 6px; }
+#count { white-space: nowrap; }
+.results-bar .reset { border: 0; background: none; color: var(--primary); font-weight: 800; cursor: pointer; padding: 6px 4px; }
+
+/* =============================================================
    GRILLA DE TARJETAS
-   ============================================= */
+   ============================================================= */
 .grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
-  padding: 16px;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+  gap: 16px; padding: 8px 0 40px;
 }
 .card {
-  background: var(--card);
-  padding: 16px;
-  border-radius: 14px;
-  box-shadow: 0 4px 10px rgba(0,0,0,.12);
-  border-left: 6px solid var(--accent);
-  animation: fadeZoom .6s ease forwards;
-  overflow: hidden;
-  word-break: break-word;
-  overflow-wrap: break-word;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  --cc: var(--i-azul); --cc-ink: var(--azul-ink);
+  background: var(--surface); border-radius: var(--radius);
+  box-shadow: var(--shadow-sm); border: 1px solid var(--line);
+  display: flex; flex-direction: column; overflow: hidden;
+  transition: transform .2s ease, box-shadow .2s ease;
+  content-visibility: auto; contain-intrinsic-size: auto 470px;
 }
-@keyframes fadeZoom {
-  from { opacity: 0; transform: scale(.96); }
-  to   { opacity: 1; transform: scale(1); }
+.card[hidden] { display: none; }
+@media (hover: hover) { .card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); } }
+.card-head {
+  padding: 16px 18px 14px; position: relative;
+  background: var(--surface-2);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--cc) 20%, var(--surface)), var(--surface) 75%);
+  border-top: 6px solid var(--cc);
 }
-.card h3 { font-size: 18px; margin: 0; }
+.card-comuna {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--cc-ink);
+}
+.card-ro {
+  position: absolute; top: 12px; right: 14px; width: 46px; height: 46px;
+  border-radius: 50%; background: #fff; box-shadow: 0 2px 8px rgba(31,42,68,.18);
+}
+/* Solo el nombre y la comuna dejan espacio al sello; las etiquetas usan todo el ancho */
+.card-head > .card-comuna { margin-right: 54px; }
+.head-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.dist {
+  display: inline-flex; align-items: center; gap: 4px; min-height: 30px;
+  font-size: 12.5px; font-weight: 800; color: var(--on-ink); background: var(--cc-ink);
+  padding: 2px 10px; border-radius: 999px;
+}
+.dist[hidden] { display: none; }
+.card.flash { animation: flash 2.2s ease; }
+@keyframes flash { 0%, 60% { box-shadow: 0 0 0 4px var(--cc), var(--shadow-md); } 100% { box-shadow: var(--shadow-sm); } }
+.card h3 { font-family: var(--font-head); font-weight: 800; font-size: 23px; line-height: 1.12; margin: 4px 54px 0 0; }
 
-/* Tabla interna de datos: 2 columnas (label | valor) */
-.card-info {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 2px 8px;
-  font-size: 13px;
-  line-height: 1.55;
+.sello {
+  margin: 0 18px; padding: 12px 14px 12px 16px;
+  border-radius: 14px; background: var(--surface-2);
+  border-left: 4px solid var(--cc);
+  position: relative;
 }
-.card-info .lbl {
-  font-weight: bold;
-  white-space: nowrap;
-  color: var(--text);
-}
-.card-info .val {
-  word-break: break-word;
-  overflow-wrap: break-word;
-}
+.sello-lbl { display: block; font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
+.sello q { font-family: var(--font-head); font-weight: 600; font-size: 16.5px; line-height: 1.3; color: var(--text); quotes: "“" "”"; }
 
-/* Badge tardes */
-.badge-program {
-  display: inline-flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 4px;
-  font-size: 13px;
-  cursor: help;
-  text-decoration: underline dotted;
-  text-underline-offset: 3px;
-  white-space: normal;
-  word-break: break-word;
+.info { list-style: none; margin: 0; padding: 12px 18px 0; display: grid; gap: 7px; font-size: 14.5px; }
+.info li { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 10px; align-items: start; min-width: 0; }
+.info .v .pre { color: var(--muted); font-weight: 700; }
+.info .ico { font-size: 18px; margin-top: 2px; color: var(--cc-ink); }
+.info .k { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.info .v { word-break: break-word; overflow-wrap: anywhere; font-weight: 600; }
+.info a { color: inherit; text-decoration: none; border-bottom: 1px dashed var(--cc-ink); }
+.info a:hover { color: var(--cc-ink); }
+.info .mail { font-size: 13.5px; }
+.phones { display: flex; flex-wrap: wrap; gap: 4px 14px; }
+
+
+.tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  min-height: 34px; padding: 4px 12px; border-radius: 999px; font-size: 13px; font-weight: 800;
+  border: 0; cursor: pointer; text-align: left;
 }
+.tag img { width: 20px; height: 20px; border-radius: 50%; }
+.tag.tj-si  { background: rgba(77,179,139,.16); color: var(--verde-ink); }
+.tag.tj-no  { background: var(--surface-2); color: var(--muted); }
+.tag .ico { font-size: 15px; }
+
+.actions { margin-top: auto; display: grid; grid-template-columns: minmax(0, 1fr) auto auto auto; gap: 8px; padding: 14px 18px 18px; }
+.btn { min-width: 0; white-space: nowrap; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  height: 44px; padding: 0 16px; border-radius: 999px;
+  font-weight: 800; font-size: 14.5px; text-decoration: none; cursor: pointer;
+  border: 2px solid transparent; transition: filter .15s, background .15s, transform .15s;
+}
+.btn:active { transform: scale(.97); }
+.btn .ico { font-size: 18px; }
+.btn-primary { background: var(--cc-ink); color: var(--on-ink); }
+.btn-primary:hover { filter: brightness(1.08); }
+.btn-ghost { width: 44px; padding: 0; border-color: var(--line); background: var(--surface); color: var(--cc-ink); }
+.btn-ghost:hover { border-color: var(--cc); }
+
+/* Colores por comuna (se asignan en ciclo) */
+.c0 { --cc: var(--i-azul);    --cc-ink: var(--azul-ink); }
+.c1 { --cc: var(--i-verde);   --cc-ink: var(--verde-ink); }
+.c2 { --cc: var(--i-rosado);  --cc-ink: var(--rosado-ink); }
+.c3 { --cc: var(--i-morado);  --cc-ink: var(--morado-ink); }
+.c4 { --cc: var(--i-naranjo); --cc-ink: var(--naranjo-ink); }
+
+.empty { display: none; text-align: center; padding: 40px 16px 60px; color: var(--muted); }
+.empty.show { display: block; }
+.empty b { display: block; font-family: var(--font-head); font-size: 22px; color: var(--text); }
+
+/* Aparición suave de tarjetas al filtrar */
+.grid.animate .card:not([hidden]) { animation: cardIn .35s ease both; }
+@keyframes cardIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 
 @media (max-width: 600px) {
-  .grid { padding: 10px; gap: 10px; }
-  .card { padding: 13px; }
-  .card h3 { font-size: 14px; }
-  .card-info { font-size: 12px; }
+  .grid { gap: 14px; }
+  .card h3 { font-size: 21px; }
+  .card-head { padding: 14px 16px 12px; }
+  .card-ro { width: 42px; height: 42px; top: 12px; right: 12px; }
+  .sello { margin: 0 16px; padding: 10px 12px 10px 14px; }
+  .sello q { font-size: 15.5px; }
+  .info { padding: 10px 16px 0; gap: 6px; font-size: 14px; }
+  .actions { padding: 12px 16px 16px; }
+}
+/* Pantallas muy angostas (≤ 350 px): el botón principal ocupa su propia fila */
+@media (max-width: 350px) {
+  .tag, .dist { padding: 3px 9px; font-size: 12px; gap: 4px; }
+  .actions { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .actions .btn-primary { grid-column: 1 / -1; }
+  .actions .btn-ghost { width: auto; }
 }
 
-/* =============================================
-   BOTÓN GOOGLE MAPS
-   ============================================= */
-.btn {
-  display: inline-block;
-  margin-top: 6px;
-  padding: 8px 18px;
-  border-radius: 16px;
-  font-size: 14px;
-  background: var(--btn);
-  color: white;
-  text-decoration: none;
-  transition: .3s;
+/* =============================================================
+   BOTÓN "VOLVER ARRIBA" Y AVISOS
+   ============================================================= */
+.fab {
+  position: fixed; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom)); z-index: 60;
+  width: 50px; height: 50px; border-radius: 50%; border: 0; cursor: pointer;
+  background: var(--azul-ink); color: var(--on-ink); box-shadow: var(--shadow-md);
+  display: grid; place-items: center; font-size: 22px;
+  opacity: 0; transform: translateY(12px) scale(.9); pointer-events: none;
+  transition: opacity .2s, transform .2s;
 }
-body:not(.dark) .btn:hover { background: #5587D4; }
-body.dark       .btn:hover { background: #FFA455; color: #000; }
+.fab.show { opacity: 1; transform: none; pointer-events: auto; }
+/* Si el aviso de instalación está visible, el botón y los avisos suben para no quedar encima */
+html.pwa-open .fab   { bottom: calc(96px + env(safe-area-inset-bottom)); }
+html.pwa-open .toast { bottom: calc(160px + env(safe-area-inset-bottom)); }
+.toast {
+  position: fixed; left: 50%; bottom: calc(80px + env(safe-area-inset-bottom)); z-index: 9700;
+  transform: translate(-50%, 20px); opacity: 0; pointer-events: none;
+  max-width: calc(100vw - 32px); width: max-content;
+  background: #1F2A44; color: #fff; font-weight: 700; font-size: 14px; line-height: 1.4;
+  padding: 12px 18px; border-radius: 14px; box-shadow: var(--shadow-md); text-align: center;
+  transition: opacity .2s, transform .2s;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
+.sortchip { display: inline-flex; align-items: center; gap: 6px; border: 0; cursor: pointer;
+  background: var(--azul-ink); color: var(--on-ink); font-weight: 800; font-size: 13px; height: 36px; padding: 0 12px; border-radius: 999px; }
+.sortchip[hidden] { display: none; }
 
-/* Tooltip flotante global — posicionado por JS, no atrapado en .card */
+/* =============================================================
+   TOOLTIP "TARDES DE JUEGO"
+   ============================================================= */
 #tip-box {
-  display: none;
-  position: fixed;
-  z-index: 99998;
-  max-width: 280px;
-  background: rgba(20,20,20,.95);
-  color: #fff;
-  padding: 11px 14px;
-  border-radius: 11px;
-  font-size: 12px;
-  line-height: 1.55;
-  box-shadow: 0 6px 20px rgba(0,0,0,.4);
-  pointer-events: none;
-  white-space: normal;
+  position: fixed; z-index: 9000; max-width: 300px;
+  background: #1F2A44; color: #fff; padding: 12px 14px; border-radius: 12px;
+  font-size: 13px; line-height: 1.5; box-shadow: 0 10px 30px rgba(0,0,0,.3);
+  opacity: 0; transform: translateY(4px); pointer-events: none; transition: opacity .15s, transform .15s;
 }
-#tip-box.visible { display: block; }
+#tip-box.visible { opacity: 1; transform: none; }
+#tip-box b { display: block; margin-bottom: 2px; color: var(--logo-amarillo); }
 
-/* =============================================
+/* =============================================================
+   PIE DE PÁGINA
+   ============================================================= */
+footer { background: #1F2A44; color: #D8DEEA; margin-top: 10px; }
+footer .stripe { height: 5px; }
+.foot { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 28px; padding: 32px 16px 20px; }
+.foot h4 { font-family: var(--font-head); color: #fff; font-size: 18px; margin: 0 0 8px; }
+.foot p { margin: 0 0 6px; font-size: 14px; }
+.foot a { color: #fff; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; padding: 4px 0; }
+.foot a:hover { color: var(--logo-amarillo); }
+.foot ul { list-style: none; margin: 0; padding: 0; }
+.foot .ico { font-size: 17px; }
+.credits { border-top: 1px solid rgba(255,255,255,.12); padding: 14px 16px calc(18px + env(safe-area-inset-bottom)); font-size: 13px; color: #A9B3C7; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; }
+@media (max-width: 720px) { .foot { grid-template-columns: 1fr; gap: 20px; } }
+
+/* =============================================================
    BANNER DE INSTALACIÓN PWA
-   ============================================= */
+   ============================================================= */
 #pwa-banner {
-  display: none;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 99999;
-  background: var(--card);
-  border-top: 3px solid var(--accent);
-  box-shadow: 0 -4px 20px rgba(0,0,0,.25);
-  padding: 14px 16px;
-  align-items: center;
-  gap: 12px;
-  animation: slideUp .4s ease;
+  position: fixed; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 9500;
+  max-width: 520px; margin: 0 auto;
+  display: none; align-items: center; gap: 12px;
+  background: var(--surface); color: var(--text); border: 1px solid var(--line);
+  border-radius: 18px; padding: 12px 12px 12px 14px; box-shadow: var(--shadow-md);
+  animation: slideUp .35s ease;
 }
 #pwa-banner.show { display: flex; }
-@keyframes slideUp {
-  from { transform: translateY(100%); opacity: 0; }
-  to   { transform: translateY(0);    opacity: 1; }
-}
-#pwa-banner img  { width: 48px; height: 48px; border-radius: 10px; flex-shrink: 0; }
-#pwa-banner .pwa-text { flex: 1; }
-#pwa-banner .pwa-text strong { display: block; font-size: 15px; margin-bottom: 2px; }
-#pwa-banner .pwa-text span   { font-size: 12px; opacity: .75; }
-#pwa-banner .pwa-install {
-  background: var(--accent);
-  color: #fff;
-  border: none;
-  padding: 9px 16px;
-  border-radius: 20px;
-  font-weight: bold;
-  cursor: pointer;
-  white-space: nowrap;
-  font-size: 13px;
-}
-#pwa-banner .pwa-close {
-  background: none;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-  color: var(--text);
-  padding: 4px 6px;
-  flex-shrink: 0;
-}
-/* iOS: instrucción especial */
+#pwa-banner img { width: 44px; height: 44px; border-radius: 12px; }
+#pwa-banner .pwa-text { flex: 1; min-width: 0; }
+#pwa-banner strong { display: block; font-size: 15px; }
+#pwa-banner span { font-size: 13px; color: var(--muted); }
+#pwa-banner .pwa-install { border: 0; border-radius: 999px; background: var(--azul-ink); color: var(--on-ink); font-weight: 800; padding: 10px 16px; cursor: pointer; }
+#pwa-banner .pwa-close { border: 0; background: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 18px; color: var(--muted); }
 #pwa-ios-hint {
-  display: none;
-  position: fixed;
-  bottom: 80px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 99999;
-  background: rgba(0,0,0,.88);
-  color: #fff;
-  padding: 12px 18px;
-  border-radius: 14px;
-  font-size: 13px;
-  text-align: center;
-  max-width: 280px;
-  line-height: 1.5;
-  box-shadow: 0 4px 20px rgba(0,0,0,.4);
-}
-#pwa-ios-hint::after {
-  content: "";
-  position: absolute;
-  bottom: -8px;
-  left: 50%;
-  transform: translateX(-50%);
-  border: 8px solid transparent;
-  border-bottom: 0;
-  border-top-color: rgba(0,0,0,.88);
+  display: none; position: fixed; left: 50%; bottom: calc(96px + env(safe-area-inset-bottom)); transform: translateX(-50%);
+  z-index: 9600; background: #1F2A44; color: #fff; padding: 12px 18px; border-radius: 14px;
+  font-size: 14px; text-align: center; max-width: 290px; line-height: 1.5; box-shadow: var(--shadow-md);
 }
 #pwa-ios-hint.show { display: block; }
-.info-icon {
-  position: fixed;
-  bottom: 12px;
-  right: 14px;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background: rgba(255,255,255,.35);
-  backdrop-filter: blur(8px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 17px;
-  color: var(--text);
-  cursor: pointer;
-  z-index: 10000;
-  border: 1px solid rgba(255,255,255,.4);
-}
-body.dark .info-icon { background: rgba(255,255,255,.35); }
+@keyframes slideUp { from { transform: translateY(120%); opacity: 0; } to { transform: none; opacity: 1; } }
 
-.info-icon .tooltip {
-  position: absolute;
-  bottom: 38px;
-  right: 0;
-  padding: 10px 14px;
-  background: rgba(0,0,0,0.45);
-  backdrop-filter: blur(12px);
-  border-radius: 10px;
-  font-size: 12px;
-  border: 1px solid rgba(0,0,0,0.45);
-  white-space: nowrap;
-  color: var(--text);
-  min-width: 180px;
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(10px) scale(.96);
-  transition: opacity .35s ease, transform .45s cubic-bezier(.22,1,.36,1);
+/* Movimiento reducido: sin desenfoques ni desplazamientos */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .2s !important; }
+  .splash.leaving { filter: none; }
 }
-body.dark .info-icon .tooltip { background: rgba(0,0,0,0.45); }
-
-.info-icon.active .tooltip {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-  pointer-events: auto;
-}
-
-.tooltip-title { font-weight: bold; margin-bottom: 2px; }
-.tooltip-year  { font-size: 11px; opacity: .8; margin-bottom: 6px; }
-.tooltip-ig {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  text-decoration: none;
-  color: var(--accent);
-  font-weight: bold;
-  line-height: 1.6;
-}
-.tooltip-igeoin {
-  display: block;
-  align-items: center;
-  gap: 12px;
-  text-decoration: none;
-  color: var(--accent);
-  font-weight: bold;
-  line-height: 1.6;
-}  
-.tooltip-ig svg { width: 20px; height: 20px; min-width: 20px; }
-
-@media (max-width: 600px) {
-  .info-icon .tooltip { max-width: 90vw; }
-  .tooltip-ig         { gap: 10px; font-size: 14px; }
-  .tooltip-igeoin     { gap: 10px; font-size: 14px; }
-}
-
 </style>
+<noscript><style>.splash{display:none} html.splash-on body{overflow:auto} html.splash-on .page{opacity:1}</style></noscript>
 </head>
 <body>
 
-<!-- =============================================
-     BANNER — JS detecta dimensiones reales de la
-     imagen y aplica su proporción exacta en escritorio.
-     En tablet/móvil CSS recorta centrado con cover.
-     ============================================= -->
-<div class="topbanner" id="banner">
-  <img src="banner.png" alt="Banner Integra Región de Los Ríos" id="bannerImg">
+<!-- Íconos (se definen una vez y se reutilizan) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.6"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 7 8 6 8-6"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M5 4h3.5l1.8 4.5-2.3 1.4a11 11 0 0 0 6.1 6.1l1.4-2.3L20 15.5V19a2 2 0 0 1-2.2 2A17 17 0 0 1 3 6.2 2 2 0 0 1 5 4z"/></symbol>
+  <symbol id="i-route" viewBox="0 0 24 24"><path d="m3 11 18-8-8 18-2-8z"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+  <symbol id="i-sun-sm" viewBox="0 0 24 24"><path d="M4 18h16M6 14a6 6 0 0 1 12 0"/><path d="M12 4v2M5 8l1.4 1.4M19 8l-1.4 1.4"/></symbol>
+  <symbol id="i-insta" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"/></symbol>
+  <symbol id="i-locate" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2.5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></symbol>
+  <symbol id="i-share" viewBox="0 0 24 24"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.2 10.8 7.6-4.4M8.2 13.2l7.6 4.4"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></symbol>
+</svg>
+
+<!-- =============================================================
+     PANTALLA DE INICIO
+     Para cambiar la imagen, reemplace img/inicio.webp, img/inicio-720.webp
+     e img/inicio.jpg (formato vertical 1080×1350 recomendado).
+     Tiempo visible: atributo data-ms (milisegundos).
+     ============================================================= -->
+<div class="splash" id="splash" data-ms="2000" role="dialog" aria-modal="true" aria-label="Bienvenida Fundación Integra">
+  <div class="splash-bg" aria-hidden="true"></div>
+  <picture>
+    <source type="image/webp" srcset="img/inicio-720.webp 720w, img/inicio.webp 1080w" sizes="(max-width: 720px) 100vw, 560px">
+    <img id="splashImg" src="img/inicio.jpg" width="1080" height="1350" fetchpriority="high"
+         alt="Fundación Integra: salas cuna y jardines infantiles gratuitos en la Región de Los Ríos">
+  </picture>
+  <button class="splash-skip" id="splashSkip" type="button">Ingresar ›</button>
+  <div class="splash-bar" aria-hidden="true"></div>
 </div>
+<script>
+/* Se ejecuta de inmediato para que el conteo parta apenas la imagen esté lista */
+(function () {
+  var el = document.getElementById("splash"), img = document.getElementById("splashImg");
+  var ms = +el.dataset.ms || 2000, done = false, t0;
+  var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  el.style.setProperty("--splash-ms", ms + "ms");
+  function close() {
+    if (done) return; done = true;
+    el.classList.add("leaving");
+    document.documentElement.classList.remove("splash-on");
+    setTimeout(function () { el.remove(); document.dispatchEvent(new Event("splash:done")); }, reduce ? 200 : 750);
+  }
+  function start() {
+    if (t0) return; t0 = setTimeout(close, ms);
+    el.classList.add("run");
+  }
+  if (img.complete && img.naturalWidth) start();
+  else { img.addEventListener("load", start); img.addEventListener("error", close); }
+  setTimeout(close, ms + 2500);          /* respaldo si la red está lenta */
+  el.addEventListener("click", close);    /* tocar en cualquier parte también ingresa */
+  document.addEventListener("keydown", function k(e) { if (e.key === "Escape" || e.key === "Enter") { close(); document.removeEventListener("keydown", k); } });
+})();
+</script>
 
-<!-- =============================================
-     MENÚ COMUNAS (generado por JS)
-     ============================================= -->
-<div class="topmenu" id="topmenu"></div>
+<div class="page" id="page">
 
-<!-- =============================================
-     GRILLA DE JARDINES (generada por JS)
-     ============================================= -->
-<div class="grid" id="grid"></div>
-
-<!-- Tooltip flotante global (no queda atrapado en .card) -->
-<div id="tip-box"></div>
-
-<!-- =============================================
-     BANNER PWA — instalación en Android / iOS
-     ============================================= -->
-<div id="pwa-banner">
-  <img src="icon-192.png" alt="Icono app">
-  <div class="pwa-text">
-    <strong>Instalar App</strong>
-    <span>Jardines Integra Los Ríos</span>
+<!-- =============================================================
+     CABECERA
+     ============================================================= -->
+<header>
+  <div class="hero-banner">
+    <picture>
+      <source type="image/webp" srcset="img/banner-800.webp 800w, img/banner.webp 1600w" sizes="100vw">
+      <img src="img/banner.jpg" width="1600" height="400" alt="Fundación Integra · Cupos disponibles · Región de Los Ríos · Salas cuna y jardines infantiles gratuitos">
+    </picture>
   </div>
-  <button class="pwa-install" id="pwa-install-btn">Instalar</button>
-  <button class="pwa-close"   id="pwa-close-btn">✕</button>
-</div>
+  <div class="stripe" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
 
-<!-- Hint para iOS (no tiene prompt nativo) -->
-<div id="pwa-ios-hint" role="tooltip">
-  Toca <strong>Compartir</strong> (□↑) y luego<br>
-  <strong>«Agregar a pantalla de inicio»</strong>
-</div>
+  <div class="wrap intro">
+   <div class="intro-text">
+    <span class="eyebrow">Fundación Integra · Región de Los Ríos</span>
+    <h1>Salas Cuna y Jardines Infantiles <span class="accent">gratuitos</span></h1>
+    <p class="lead">Encuentre el establecimiento más cercano a su familia: dirección, contacto, horario de inicio de jornada y el sello de su Proyecto Educativo Institucional (PEI).</p>
 
-<!-- =============================================
-     ÍCONO INFO / CRÉDITOS
-     ============================================= -->
-<div class="info-icon" id="infoIcon" tabindex="0" aria-expanded="false">ℹ️
-  <div class="tooltip">
-    <div class="tooltip-title">Creado por: Julio Alveal Tejos</div>
-    <div class="tooltip-year">2026</div>
-    <a class="tooltip-ig"
-       href="https://www.instagram.com/integra_losrios?igsh=MTFnd3Yzam0wc3Awaw=="
-       target="_blank">
-      <svg viewBox="0 0 24 24" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
-        <path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2Zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5a4.25 4.25 0 0 0 4.25-4.25v-8.5A4.25 4.25 0 0 0 16.25 3.5h-8.5ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 1.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Zm5.25-1.75a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5Z"/>
-      </svg>
-      <span>@integra_losrios</span>
-    </a>
-        <a class="tooltip-igeoin"
-       href="https://geobuscador.integra.cl/"
-       target="_blank">
-      <span>📍Geobuscador.integra</span>
-    </a>
+    <div class="stats" id="stats">
+      <div class="stat" style="--c:var(--i-azul);--c-ink:var(--azul-ink)"><b id="stTotal">–</b><span>Establecimientos</span></div>
+      <div class="stat" style="--c:var(--i-verde);--c-ink:var(--verde-ink)"><b id="stComunas">–</b><span>Comunas</span></div>
+      <div class="stat" style="--c:var(--i-naranjo);--c-ink:var(--naranjo-ink)"><b id="stTardes">–</b><span>Con Tardes de Juego</span></div>
+      <div class="stat" style="--c:var(--i-rosado);--c-ink:var(--rosado-ink)"><b>100%</b><span>Con Reconocimiento Oficial</span></div>
+    </div>
+   </div>
+
+    <!-- RECONOCIMIENTO OFICIAL -->
+    <section class="ro" aria-labelledby="roTitle">
+      <picture>
+        <source type="image/webp" srcset="img/reconocimiento-oficial.webp">
+        <img class="ro-seal" src="img/reconocimiento-oficial.png" width="296" height="296" loading="lazy" decoding="async"
+             alt="Sello Reconocimiento Oficial otorgado por el Ministerio de Educación">
+      </picture>
+      <div>
+        <p class="ro-kicker">Ministerio de Educación</p>
+        <h2 id="roTitle">Contamos con el <span class="pct">100%</span> de nuestros jardines infantiles y salas cuna con Reconocimiento Oficial</h2>
+        <details class="ro-more" id="roMore">
+          <summary>¿Qué significa?</summary>
+          <p>Todos los establecimientos de Fundación Integra en la Región de Los Ríos cuentan con el Reconocimiento Oficial otorgado por el Ministerio de Educación, que acredita el cumplimiento de los requisitos pedagógicos, jurídicos y de infraestructura establecidos por la normativa vigente.</p>
+        </details>
+      </div>
+    </section>
   </div>
+</header>
+
+<!-- =============================================================
+     BÚSQUEDA Y FILTROS
+     ============================================================= -->
+<main id="directorio">
+  <div class="toolbar" id="toolbar">
+    <div class="wrap">
+      <div class="tb-row">
+        <label class="search" id="searchBox">
+          <span class="sr-only">Buscar jardín</span>
+          <svg class="ico"><use href="#i-search"/></svg>
+          <input id="q" type="search" inputmode="search" enterkeyhint="search" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="Buscar jardín o calle…">
+          <button class="clear" id="qClear" type="button" aria-label="Borrar búsqueda"><svg class="ico"><use href="#i-x"/></svg></button>
+        </label>
+        <button class="icon-btn" id="nearBtn" type="button" aria-pressed="false" aria-label="Ordenar por cercanía a mi ubicación" title="Cerca de mí">
+          <svg class="ico"><use href="#i-locate"/></svg>
+        </button>
+        <button class="icon-btn" id="themeBtn" type="button" aria-label="Cambiar entre modo claro y oscuro" title="Modo claro / oscuro">
+          <svg class="ico moon"><use href="#i-moon"/></svg><svg class="ico sun"><use href="#i-sun"/></svg>
+        </button>
+      </div>
+      <div class="pills" id="pills" role="toolbar" aria-label="Filtrar por comuna"></div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="results-bar">
+      <span id="count" aria-live="polite"></span>
+      <span class="right">
+        <button type="button" class="sortchip" id="sortChip" hidden aria-label="Quitar orden por cercanía">Por cercanía ✕</button>
+        <button class="reset" id="reset" type="button" hidden>Limpiar filtros</button>
+      </span>
+    </div>
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="empty"><b>No encontramos coincidencias</b>Pruebe con otro nombre o seleccione «Todas las comunas».</div>
+  </div>
+</main>
+
+<!-- =============================================================
+     PIE DE PÁGINA
+     ============================================================= -->
+<footer>
+  <div class="stripe" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+  <div class="wrap foot">
+    <div>
+      <h4>Fundación Integra · Región de Los Ríos</h4>
+      <p>Red de salas cuna y jardines infantiles gratuitos, con jornada extendida según disponibilidad.</p>
+      <ul><li><a href="tel:+56632631300"><svg class="ico"><use href="#i-phone"/></svg>63 263 13 00</a></li></ul>
+    </div>
+    <div>
+      <h4>Enlaces</h4>
+      <ul>
+        <li><a href="https://www.integra.cl" target="_blank" rel="noopener"><svg class="ico"><use href="#i-globe"/></svg>www.integra.cl</a></li>
+        <li><a href="https://geobuscador.integra.cl/" target="_blank" rel="noopener"><svg class="ico"><use href="#i-pin"/></svg>Geobuscador Integra</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Síganos</h4>
+      <ul><li><a href="https://www.instagram.com/integra_losrios?igsh=MTFnd3Yzam0wc3Awaw==" target="_blank" rel="noopener"><svg class="ico"><use href="#i-insta"/></svg>@integra_losrios</a></li></ul>
+    </div>
+  </div>
+  <div class="wrap credits"><span>© 2026 Fundación Integra · Región de Los Ríos</span><span>Creado por: Julio Alveal Tejos</span></div>
+</footer>
+
+</div><!-- /.page -->
+
+<div id="tip-box" role="tooltip"></div>
+<button class="fab" id="fab" type="button" aria-label="Volver arriba"><svg class="ico"><use href="#i-up"/></svg></button>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- BANNER PWA — instalación en Android / iOS -->
+<div id="pwa-banner" role="dialog" aria-label="Instalar aplicación">
+  <img src="img/icon-96.webp" alt="" width="44" height="44" loading="lazy">
+  <div class="pwa-text"><strong>Instalar la app</strong><span>Jardines Integra Los Ríos</span></div>
+  <button class="pwa-install" id="pwa-install-btn" type="button">Instalar</button>
+  <button class="pwa-close" id="pwa-close-btn" type="button" aria-label="Cerrar">✕</button>
 </div>
+<div id="pwa-ios-hint" role="tooltip">Toque <strong>Compartir</strong> (□↑) y luego<br><strong>«Agregar a pantalla de inicio»</strong></div>
 
 <script>
 /* ============================================================
-   ██████╗  █████╗ ████████╗ ██████╗ ███████╗
-   ██╔══██╗██╔══██╗╚══██╔══╝██╔═══██╗██╔════╝
-   ██║  ██║███████║   ██║   ██║   ██║███████╗
-   ██║  ██║██╔══██║   ██║   ██║   ██║╚════██║
-   ██████╔╝██║  ██║   ██║   ╚██████╔╝███████║
-   ╚═════╝ ╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚══════╝
+   DATOS DE LOS JARDINES
 
-   ✏️  PARA EDITAR UN JARDÍN busca su nombre en la lista
-       y modifica los campos correspondientes:
+   ✏️  PARA EDITAR UN JARDÍN busque su nombre en la lista
+       y modifique los campos correspondientes:
          nombre      → Nombre del jardín
-         comuna      → Comuna (debe coincidir con el filtro)
+         comuna      → Comuna (define los botones de filtro)
          direccion   → Dirección completa
          jornada     → Hora de inicio de jornada
          correo      → Correo institucional
          fono        → Teléfono fijo (o "No tiene")
          celular     → Celular institucional
          tardes      → true = "Con Tardes de Juego"  /  false = "Sin Tardes de Juego"
+         sello       → Sello del Proyecto Educativo Institucional (PEI), sin comillas
          maps        → Enlace Google Maps (coordenadas)
    ============================================================ */
 
 const JARDINES = [
 
-  /* ─── VALDIVIA ─────────────────────────────────────────── */
+  /* ─── VALDIVIA ────────────────────────────────────────── */
   {
     nombre:    "El Canelito",
     comuna:    "Valdivia",
@@ -451,6 +810,7 @@ const JARDINES = [
     fono:      "442865477",
     celular:   "939225342",
     tardes:    true,
+    sello:     "Niños y niñas Felices… Grandes Ciudadanos",
     maps:      "https://maps.google.com/?q=-39.84273497286754,-73.21693456748824"
   },
   {
@@ -462,6 +822,7 @@ const JARDINES = [
     fono:      "443561614",
     celular:   "939244138",
     tardes:    true,
+    sello:     "Descubrir y expresar la cultura a través de las artes",
     maps:      "https://maps.google.com/?q=-39.80377064546047,-73.2089080336706"
   },
   {
@@ -473,6 +834,7 @@ const JARDINES = [
     fono:      "443561626",
     celular:   "939225345",
     tardes:    true,
+    sello:     "Un mundo de experiencias, conocimientos y oportunidades",
     maps:      "https://maps.google.com/?q=-39.83495914304212,-73.25620091489277"
   },
   {
@@ -484,6 +846,7 @@ const JARDINES = [
     fono:      "443578164",
     celular:   "939225328",
     tardes:    true,
+    sello:     "La aventura de construir un mundo de aprendizajes",
     maps:      "https://maps.google.com/?q=-39.81424785013783,-73.22537407541412"
   },
   {
@@ -495,6 +858,7 @@ const JARDINES = [
     fono:      "443578165",
     celular:   "939225346",
     tardes:    true,
+    sello:     "Imaginando y creando expreso mis talentos jugando",
     maps:      "https://maps.google.com/?q=-39.84414187955394,-73.22834071255748"
   },
   {
@@ -506,6 +870,7 @@ const JARDINES = [
     fono:      "442852366",
     celular:   "939225322",
     tardes:    true,
+    sello:     "Pequeños ciudadanos, grandes sueños y opiniones",
     maps:      "https://maps.google.com/?q=-39.80950032451909,-73.25326488570953"
   },
   {
@@ -517,6 +882,7 @@ const JARDINES = [
     fono:      "443578166",
     celular:   "939225323",
     tardes:    true,
+    sello:     "Jugando descubro y aprecio el medio ambiente",
     maps:      "https://maps.google.com/?q=-39.85028841951018,-73.22424813394893"
   },
   {
@@ -528,6 +894,7 @@ const JARDINES = [
     fono:      "443578167",
     celular:   "939244136",
     tardes:    true,
+    sello:     "Educamos con respeto e inclusión, dejando huellas en el corazón",
     maps:      "https://maps.google.com/?q=-39.807632649126056,-73.22226378605754"
   },
   {
@@ -539,6 +906,7 @@ const JARDINES = [
     fono:      "443578168",
     celular:   "939225335",
     tardes:    true,
+    sello:     "La magia de los cuentos, se vive en el jardín infantil y sala cuna el principito",
     maps:      "https://maps.google.com/?q=-39.848771638045235,-73.2477758706834"
   },
   {
@@ -550,6 +918,7 @@ const JARDINES = [
     fono:      "443561625",
     celular:   "939244153",
     tardes:    true,
+    sello:     "Con diversidad y amor me educo para un mundo mejor",
     maps:      "https://maps.google.com/?q=-39.806084790523975,-73.22033077826207"
   },
   {
@@ -561,6 +930,7 @@ const JARDINES = [
     fono:      "442863975",
     celular:   "939225339",
     tardes:    true,
+    sello:     "Conociendo mis emociones, a través de la creatividad",
     maps:      "https://maps.google.com/?q=-39.853275602464464,-73.23143306142862"
   },
   {
@@ -572,6 +942,7 @@ const JARDINES = [
     fono:      "442898168",
     celular:   "939225344",
     tardes:    true,
+    sello:     "En familia aprendemos juntos a caminar",
     maps:      "https://maps.google.com/?q=-39.844201811271745,-73.21486129465939"
   },
   {
@@ -583,6 +954,7 @@ const JARDINES = [
     fono:      "443578170",
     celular:   "939225340",
     tardes:    true,
+    sello:     "Con buen trato y amor educando para un futuro mejor",
     maps:      "https://maps.google.com/?q=-39.8521791164857,-73.23063825420769"
   },
   {
@@ -594,6 +966,7 @@ const JARDINES = [
     fono:      "442875091",
     celular:   "939225325",
     tardes:    true,
+    sello:     "Niños y niñas felices, enriquecen sus aprendizajes, valorando la diversidad",
     maps:      "https://maps.google.com/?q=-39.84482253485546,-73.21738114843103"
   },
   {
@@ -605,6 +978,7 @@ const JARDINES = [
     fono:      "442861786",
     celular:   "939244134",
     tardes:    true,
+    sello:     "Educando en valores para ti, para mí y nuestro entorno",
     maps:      "https://maps.google.com/?q=-39.84933717412028,-73.2538765276511"
   },
   {
@@ -616,6 +990,7 @@ const JARDINES = [
     fono:      "442911037",
     celular:   "939225341",
     tardes:    true,
+    sello:     "Imagino con libertad y me expreso a través del arte",
     maps:      "https://maps.google.com/?q=-39.83614405252419,-73.2073507494457"
   },
   {
@@ -627,6 +1002,7 @@ const JARDINES = [
     fono:      "443578171",
     celular:   "939244137",
     tardes:    true,
+    sello:     "Compartimos y aprendemos a través de la exploración del entorno natural",
     maps:      "https://maps.google.com/?q=-39.8478677567265,-73.24595993308479"
   },
   {
@@ -638,10 +1014,11 @@ const JARDINES = [
     fono:      "442864796",
     celular:   "939225337",
     tardes:    true,
+    sello:     "Educar promoviendo un ambiente bien tratante",
     maps:      "https://maps.google.com/?q=-39.82835055956444,-73.24760519075915"
   },
 
-  /* ─── CORRAL ────────────────────────────────────────────── */
+  /* ─── CORRAL ──────────────────────────────────────────── */
   {
     nombre:    "Naguilán",
     comuna:    "Corral",
@@ -651,10 +1028,11 @@ const JARDINES = [
     fono:      "632-525209",
     celular:   "939225330",
     tardes:    false,
+    sello:     "En el Jardín Naguilán, escuchando la voz de niños y niñas aprendemos en comunidad",
     maps:      "https://maps.google.com/?q=-39.88761804186303,-73.43172124653093"
   },
 
-  /* ─── MÁFIL ─────────────────────────────────────────────── */
+  /* ─── MÁFIL ───────────────────────────────────────────── */
   {
     nombre:    "Palomitas",
     comuna:    "Máfil",
@@ -664,10 +1042,11 @@ const JARDINES = [
     fono:      "443578155",
     celular:   "939225336",
     tardes:    true,
+    sello:     "Habilidades para la vida, juego inclusión y valores a través de los lenguajes de arte y cultura",
     maps:      "https://maps.google.com/?q=-39.6586648458884,-72.95080709194609"
   },
 
-  /* ─── LANCO ─────────────────────────────────────────────── */
+  /* ─── LANCO ───────────────────────────────────────────── */
   {
     nombre:    "Nuevos Pasitos",
     comuna:    "Lanco",
@@ -677,6 +1056,7 @@ const JARDINES = [
     fono:      "443578149",
     celular:   "939244139",
     tardes:    true,
+    sello:     "Mi arte, mi identidad",
     maps:      "https://maps.google.com/?q=-39.4510197581369,-72.76116208342668"
   },
   {
@@ -688,6 +1068,7 @@ const JARDINES = [
     fono:      "443561628",
     celular:   "934303931",
     tardes:    true,
+    sello:     "Medio ambiente y educación, conciencia en acción",
     maps:      "https://maps.google.com/?q=-39.449801886795846,-72.76539121313094"
   },
   {
@@ -699,10 +1080,11 @@ const JARDINES = [
     fono:      "443578152",
     celular:   "939244133",
     tardes:    true,
+    sello:     "Sembrando valores, para un mundo mejor",
     maps:      "https://maps.google.com/?q=-39.4495324097325,-72.77588714660271"
   },
 
-  /* ─── LOS LAGOS ─────────────────────────────────────────── */
+  /* ─── LOS LAGOS ───────────────────────────────────────── */
   {
     nombre:    "Girasol",
     comuna:    "Los Lagos",
@@ -712,6 +1094,7 @@ const JARDINES = [
     fono:      "632-525221",
     celular:   "939225334",
     tardes:    true,
+    sello:     "Cultivando girasoles, florecen talentos",
     maps:      "https://maps.google.com/?q=-39.86710205055036,-72.80900593122801"
   },
   {
@@ -723,6 +1106,7 @@ const JARDINES = [
     fono:      "443578153",
     celular:   "939225333",
     tardes:    true,
+    sello:     "Me expreso y aprendo a través del arte y movimiento",
     maps:      "https://maps.google.com/?q=-39.86822392591918,-72.80491434070953"
   },
   {
@@ -734,10 +1118,11 @@ const JARDINES = [
     fono:      "443578154",
     celular:   "939244132",
     tardes:    true,
+    sello:     "Desarrollar competencias emocionales a través de prácticas educativas afectivas",
     maps:      "https://maps.google.com/?q=-39.859839530145464,-72.81787053122743"
   },
 
-  /* ─── MARIQUINA ──────────────────────────────────────────── */
+  /* ─── MARIQUINA ───────────────────────────────────────── */
   {
     nombre:    "San José",
     comuna:    "Mariquina",
@@ -747,6 +1132,7 @@ const JARDINES = [
     fono:      "443578156",
     celular:   "939225324",
     tardes:    true,
+    sello:     "Rescate y valoración de la cultura local de San José de la Marquina",
     maps:      "https://maps.google.com/?q=-39.53682143604086,-72.96242541102856"
   },
   {
@@ -758,6 +1144,7 @@ const JARDINES = [
     fono:      "443578157",
     celular:   "939225326",
     tardes:    true,
+    sello:     "Con afecto y buen trato nuestros espacios son más gratos",
     maps:      "https://maps.google.com/?q=-39.539084682481224,-72.95679721069237"
   },
   {
@@ -769,6 +1156,7 @@ const JARDINES = [
     fono:      "443578158",
     celular:   "939225321",
     tardes:    true,
+    sello:     "Jugamos con protagonismo y felicidad",
     maps:      "https://maps.google.com/?q=-39.538953327057726,-72.9726137373737"
   },
   {
@@ -780,10 +1168,11 @@ const JARDINES = [
     fono:      "443578159",
     celular:   "939244140",
     tardes:    true,
+    sello:     "Con buen trato y bienestar lograremos educación de calidad",
     maps:      "https://maps.google.com/?q=-39.540747272289245,-72.96502701871266"
   },
 
-  /* ─── PAILLACO ───────────────────────────────────────────── */
+  /* ─── PAILLACO ────────────────────────────────────────── */
   {
     nombre:    "Paillaquito",
     comuna:    "Paillaco",
@@ -793,6 +1182,7 @@ const JARDINES = [
     fono:      "443561627",
     celular:   "939225338",
     tardes:    true,
+    sello:     "Junto exploramos, disfrutamos y valoramos nuestro entorno social y cultural",
     maps:      "https://maps.google.com/?q=-40.07079431359184,-72.8667574761479"
   },
   {
@@ -804,6 +1194,7 @@ const JARDINES = [
     fono:      "443578161",
     celular:   "939244141",
     tardes:    true,
+    sello:     "Dejando huellas con una educación basada el buen trato",
     maps:      "https://maps.google.com/?q=-40.06939067129962,-72.87661713127963"
   },
   {
@@ -815,10 +1206,11 @@ const JARDINES = [
     fono:      "442865835",
     celular:   "939244142",
     tardes:    true,
+    sello:     "Juega, ríe, expresa y transforma",
     maps:      "https://maps.google.com/?q=-40.06683452653989,-72.86989611276907"
   },
 
-  /* ─── LA UNIÓN ───────────────────────────────────────────── */
+  /* ─── LA UNIÓN ────────────────────────────────────────── */
   {
     nombre:    "Blanca Nieves",
     comuna:    "La Unión",
@@ -828,6 +1220,7 @@ const JARDINES = [
     fono:      "443561629",
     celular:   "939225343",
     tardes:    true,
+    sello:     "Educar para Convivir",
     maps:      "https://maps.google.com/?q=-40.30661303157749,-73.0813732566189"
   },
   {
@@ -839,6 +1232,7 @@ const JARDINES = [
     fono:      "443561605",
     celular:   "939225332",
     tardes:    true,
+    sello:     "La felicidad una forma de educar",
     maps:      "https://maps.google.com/?q=-40.28207097850567,-73.07528159162877"
   },
   {
@@ -850,10 +1244,11 @@ const JARDINES = [
     fono:      "443578143",
     celular:   "939244144",
     tardes:    true,
+    sello:     "Por un mundo mejor, educando con AMOR",
     maps:      "https://maps.google.com/?q=-40.30465770944795,-73.07357663875011"
   },
 
-  /* ─── FUTRONO ────────────────────────────────────────────── */
+  /* ─── FUTRONO ─────────────────────────────────────────── */
   {
     nombre:    "Los Grillitos",
     comuna:    "Futrono",
@@ -863,6 +1258,7 @@ const JARDINES = [
     fono:      "632-202712",
     celular:   "939225320",
     tardes:    true,
+    sello:     "Rescate y valoración de la cultura local y del entorno natural",
     maps:      "https://maps.google.com/?q=-40.12324084796682,-72.38613546774617"
   },
   {
@@ -874,10 +1270,11 @@ const JARDINES = [
     fono:      "632-291307",
     celular:   "939244149",
     tardes:    true,
+    sello:     "A través del arte y la expresión vamos dejando huella en la educación",
     maps:      "https://maps.google.com/?q=-40.129609782779994,-72.39088137588591"
   },
 
-  /* ─── RÍO BUENO ──────────────────────────────────────────── */
+  /* ─── RÍO BUENO ───────────────────────────────────────── */
   {
     nombre:    "Arco Iris",
     comuna:    "Río Bueno",
@@ -887,6 +1284,7 @@ const JARDINES = [
     fono:      "443578145",
     celular:   "939225331",
     tardes:    false,
+    sello:     "El buen trato… una forma de transformar tu mundo",
     maps:      "https://maps.google.com/?q=-40.33467828241973,-72.96734996099735"
   },
   {
@@ -898,6 +1296,7 @@ const JARDINES = [
     fono:      "443578147",
     celular:   "939225329",
     tardes:    true,
+    sello:     "Enseñando con amor y respeto a través del arte, la fantasía y el juego",
     maps:      "https://maps.google.com/?q=-40.33641556249562,-72.94400743574617"
   },
   {
@@ -909,6 +1308,7 @@ const JARDINES = [
     fono:      "443578146",
     celular:   "939225327",
     tardes:    false,
+    sello:     "Un jardín para jugar y aprender con amor",
     maps:      "https://maps.google.com/?q=-40.3374953920215,-72.9408330170455"
   },
   {
@@ -920,10 +1320,11 @@ const JARDINES = [
     fono:      "443578148",
     celular:   "939244146",
     tardes:    true,
+    sello:     "El destino del planeta está en tus manos",
     maps:      "https://maps.google.com/?q=-40.33801996560681,-72.95093077713962"
   },
 
-  /* ─── LAGO RANCO ─────────────────────────────────────────── */
+  /* ─── LAGO RANCO ──────────────────────────────────────── */
   {
     nombre:    "Rucantú",
     comuna:    "Lago Ranco",
@@ -933,10 +1334,11 @@ const JARDINES = [
     fono:      "632-525220",
     celular:   "939244145",
     tardes:    true,
+    sello:     "Jardín Infantil y Sala Cuna Rucantu en terreno",
     maps:      "https://maps.google.com/?q=-40.322511399390784,-72.48018198801051"
   },
 
-  /* ─── MALALHUE ───────────────────────────────────────────── */
+  /* ─── MALALHUE ────────────────────────────────────────── */
   {
     nombre:    "Caminito de Luna",
     comuna:    "Malalhue",
@@ -946,10 +1348,11 @@ const JARDINES = [
     fono:      "443578150",
     celular:   "956592506",
     tardes:    true,
+    sello:     "Jugando aprendo activa y saludable",
     maps:      "https://maps.google.com/?q=-39.53981966398247,-72.50695992209207"
   },
 
-  /* ─── PANGUIPULLI ────────────────────────────────────────── */
+  /* ─── PANGUIPULLI ─────────────────────────────────────── */
   {
     nombre:    "Fuente de Luz",
     comuna:    "Panguipulli",
@@ -959,239 +1362,363 @@ const JARDINES = [
     fono:      "443578162",
     celular:   "939244143",
     tardes:    true,
+    sello:     "Educando con emoción, juego e inclusión abrimos el corazón",
     maps:      "https://maps.google.com/?q=-39.64536071295943,-72.34314207147095"
   }
-
 ]; /* ← FIN DE LA LISTA DE JARDINES */
 
 
-/* ============================================================
-   TOOLTIP TARDES DE JUEGO
-   ============================================================ */
-const TARDES_TIP = "Es un programa de extensión horaria de Fundación Integra que ofrece un espacio seguro, lúdico y de bienestar para niños y niñas después de la jornada normal (16:30 a 19:30 hrs). Busca brindar cuidado y actividades recreativas, siendo un apoyo para familias que trabajan, enfocado en el descanso, el juego y la protección infantil.";
-
+const TARDES_TIP = "Programa de extensión horaria de Fundación Integra que ofrece un espacio seguro, lúdico y de bienestar para niñas y niños después de la jornada regular (16:30 a 19:30 hrs.). Brinda cuidado y actividades recreativas como apoyo a las familias que trabajan, con foco en el descanso, el juego y la protección de la infancia.";
 
 /* ============================================================
-   RENDERIZADO
+   UTILIDADES
    ============================================================ */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+const norm = s => String(s ?? "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+const digits = s => String(s ?? "").replace(/\D/g, "");
+/* Teléfonos chilenos → enlace tel: con prefijo +56 */
+function telHref(n) {
+  const d = digits(n);
+  if (!d) return null;
+  if (d.length === 9) return "tel:+56" + d;           // 9XXXXXXXX / 44XXXXXXX / 63XXXXXXX
+  if (d.length === 8) return "tel:+5663" + d.slice(-7).padStart(7, "0");
+  return "tel:" + d;
+}
+/* Formato legible: 9 3922 5342 / 44 286 5477 */
+function telFmt(n) {
+  const d = digits(n);
+  if (d.length !== 9) return n;
+  return d[0] === "9" ? `${d[0]} ${d.slice(1,5)} ${d.slice(5)}` : `${d.slice(0,2)} ${d.slice(2,5)} ${d.slice(5)}`;
+}
+function mapsHref(url) {
+  const m = /q=(-?[\d.]+),(-?[\d.]+)/.exec(url || "");
+  return m ? `https://www.google.com/maps/dir/?api=1&destination=${m[1]},${m[2]}` : url;
+}
+const ico = id => `<svg class="ico" aria-hidden="true"><use href="#i-${id}"/></svg>`;
+const slug = s => norm(s).replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+const coords = url => { const m = /q=(-?[\d.]+),(-?[\d.]+)/.exec(url || ""); return m ? [+m[1], +m[2]] : null; };
+/* Aviso breve en pantalla */
+const toast = (() => {
+  let timer;
+  return (msg, ms = 2800) => {
+    const el = document.getElementById("toast");
+    el.textContent = msg; el.classList.add("show");
+    clearTimeout(timer); timer = setTimeout(() => el.classList.remove("show"), ms);
+  };
+})();
 
-// Comunas únicas en orden
-const COMUNAS = ["Todos", ...new Set(JARDINES.map(j => j.comuna))];
+/* ============================================================
+   CONSTRUCCIÓN (una sola vez; filtrar solo muestra/oculta)
+   ============================================================ */
+const COMUNAS = [...new Set(JARDINES.map(j => j.comuna))];
+const colorOf = c => "c" + (COMUNAS.indexOf(c) % 5);
+const grid = $("#grid");
 
-// Menú
-const menu = document.getElementById("topmenu");
-COMUNAS.forEach(c => {
-  const btn = document.createElement("button");
-  btn.textContent = c;
-  if (c === "Todos") btn.classList.add("active");
-  btn.onclick = () => filtrar(c, btn);
-  menu.appendChild(btn);
-});
-// Botón modo oscuro
-const modeBtn = document.createElement("button");
-modeBtn.textContent = "🌞 / 🌙";
-modeBtn.onclick = () => document.body.classList.toggle("dark");
-menu.appendChild(modeBtn);
-
-// Grilla
-const grid = document.getElementById("grid");
-JARDINES.forEach(j => {
-  const card = document.createElement("div");
-  card.className = "card";
-  card.dataset.comuna = j.comuna;
-  card.innerHTML = `
-    <h3>${j.nombre}</h3>
-    <div class="card-info">
-      <span class="lbl">Comuna:</span>     <span class="val">${j.comuna}</span>
-      <span class="lbl">Dirección:</span>  <span class="val">${j.direccion}</span>
-      <span class="lbl">Jornada:</span>    <span class="val">${j.jornada}</span>
-      <span class="lbl">Correo:</span>     <span class="val">${j.correo}</span>
-      <span class="lbl">Fono:</span>       <span class="val">${j.fono}</span>
-      <span class="lbl">Celular:</span>    <span class="val">${j.celular}</span>
+grid.innerHTML = JARDINES.map((j, i) => {
+  const fono = telHref(j.fono), cel = telHref(j.celular);
+  return `
+  <article class="card ${colorOf(j.comuna)}" data-i="${i}" id="j-${slug(j.nombre)}">
+    <div class="card-head">
+      <span class="card-comuna">${ico("pin")}${esc(j.comuna)}</span>
+      <h3>${esc(j.nombre)}</h3>
+      <div class="head-chips">
+        <span class="dist" hidden></span>
+        <button type="button" class="tag ${j.tardes ? "tj-si" : "tj-no"}" data-tip aria-describedby="tip-box">
+          ${ico("sun-sm")}${j.tardes ? "Con" : "Sin"} Tardes de Juego
+        </button>
+      </div>
+      <img class="card-ro" src="img/reconocimiento-oficial-96.webp" width="46" height="46" loading="lazy" decoding="async"
+           alt="Reconocimiento Oficial" title="Establecimiento con Reconocimiento Oficial del Ministerio de Educación">
     </div>
-    <span class="badge badge-program" data-tip="${TARDES_TIP}">
-      ${j.tardes ? "Con" : "Sin"} Tardes de Juego en mi Jardín
-    </span>
-    <a class="btn" href="${j.maps}" target="_blank">📍 Ingresar a Google Maps</a>`;
-  grid.appendChild(card);
+    ${j.sello ? `<div class="sello"><span class="sello-lbl">Sello PEI</span><q>${esc(j.sello)}</q></div>` : ""}
+    <ul class="info">
+      <li>${ico("pin")}<div><span class="k">Dirección</span><span class="v">${esc(j.direccion)}</span></div></li>
+      <li>${ico("clock")}<div><span class="k">Inicio de jornada</span><span class="v"><span class="pre">Inicio de jornada:</span> ${esc(j.jornada)} hrs.</span></div></li>
+      <li>${ico("mail")}<div><span class="k">Correo</span><span class="v mail"><a href="mailto:${esc(j.correo)}">${esc(j.correo)}</a></span></div></li>
+      <li>${ico("phone")}<div><span class="k">Teléfonos</span><span class="v phones">
+        ${fono ? `<a href="${fono}">${esc(telFmt(j.fono))}</a>` : `<span>${esc(j.fono || "No tiene")}</span>`}
+        ${cel ? `<a href="${cel}">${esc(telFmt(j.celular))}</a>` : ""}
+      </span></div></li>
+    </ul>
+    <div class="actions">
+      <a class="btn btn-primary" href="${esc(mapsHref(j.maps))}" target="_blank" rel="noopener">${ico("route")}Cómo llegar</a>
+      ${cel || fono ? `<a class="btn btn-ghost" href="${cel || fono}" aria-label="Llamar a ${esc(j.nombre)}" title="Llamar">${ico("phone")}</a>` : ""}
+      <a class="btn btn-ghost" href="mailto:${esc(j.correo)}" aria-label="Escribir a ${esc(j.nombre)}" title="Enviar correo">${ico("mail")}</a>
+      <button class="btn btn-ghost" type="button" data-share aria-label="Compartir ${esc(j.nombre)}" title="Compartir">${ico("share")}</button>
+    </div>
+  </article>`;
+}).join("");
+
+const cards = [...grid.children];
+/* Texto de búsqueda precalculado (sin tildes) */
+const haystack = JARDINES.map(j => norm([j.nombre, j.comuna, j.direccion, j.sello, j.correo].join(" ")));
+
+/* Reconocimiento Oficial: texto abierto en computador, plegable en celular */
+(function () {
+  const d = $("#roMore"), mq = matchMedia("(min-width: 721px)");
+  const sync = () => { if (mq.matches) d.open = true; };
+  sync(); mq.addEventListener ? mq.addEventListener("change", sync) : mq.addListener(sync);
+})();
+
+/* Indicadores */
+$("#stTotal").textContent   = JARDINES.length;
+$("#stComunas").textContent = COMUNAS.length;
+$("#stTardes").textContent  = JARDINES.filter(j => j.tardes).length;
+
+/* ============================================================
+   FILTROS: comuna + búsqueda + Tardes de Juego
+   ============================================================ */
+const state = { comuna: "Todas", q: "", tardes: false };
+const pills = $("#pills");
+const countBy = COMUNAS.reduce((o, c) => (o[c] = JARDINES.filter(j => j.comuna === c).length, o), {});
+const inkVar = ["--azul-ink", "--verde-ink", "--rosado-ink", "--morado-ink", "--naranjo-ink"];
+const colVar = ["--i-azul", "--i-verde", "--i-rosado", "--i-morado", "--i-naranjo"];
+
+pills.innerHTML =
+  `<button type="button" class="pill" data-comuna="Todas" aria-pressed="true">Todas las comunas <span class="n">${JARDINES.length}</span></button>` +
+  `<span class="sep" aria-hidden="true"></span><button type="button" class="pill toggle" id="tjToggle" aria-pressed="false">${ico("sun-sm")}Tardes de Juego</button><span class="sep" aria-hidden="true"></span>` +
+  COMUNAS.map((c, i) => `<button type="button" class="pill" data-comuna="${esc(c)}" aria-pressed="false"
+     style="--pc:var(${colVar[i % 5]});--pc-ink:var(${inkVar[i % 5]})">${esc(c)} <span class="n">${countBy[c]}</span></button>`).join("");
+
+/* Si la persona ya bajó por la lista, vuelve al inicio de los resultados */
+function toResults() {
+  const top = $("#directorio").getBoundingClientRect().top + scrollY;
+  if (scrollY > top + 4) scrollTo({ top, behavior: "smooth" });
+}
+pills.addEventListener("click", e => {
+  const b = e.target.closest(".pill[data-comuna]"); if (!b) return;
+  state.comuna = b.dataset.comuna;
+  const r = b.getBoundingClientRect(), pr = pills.getBoundingClientRect();
+  pills.scrollBy({ left: r.left - pr.left - (pr.width - r.width) / 2, behavior: "smooth" });
+  apply(true); toResults();
+});
+$("#tjToggle").addEventListener("click", () => { state.tardes = !state.tardes; apply(true); toResults(); });
+
+const q = $("#q"), qBox = $("#searchBox");
+let qTimer;
+q.addEventListener("input", () => {
+  qBox.classList.toggle("has-value", !!q.value);
+  clearTimeout(qTimer);
+  qTimer = setTimeout(() => { state.q = norm(q.value.trim()); apply(false); }, 120);
+});
+q.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); q.blur(); toResults(); } });
+$("#qClear").addEventListener("click", () => { q.value = ""; qBox.classList.remove("has-value"); state.q = ""; apply(false); q.focus(); });
+$("#reset").addEventListener("click", () => { q.value = ""; qBox.classList.remove("has-value"); Object.assign(state, { comuna: "Todas", q: "", tardes: false }); apply(true); });
+
+/* Reinicia la animación de entrada sin forzar recálculos de diseño */
+function replay() {
+  grid.classList.remove("animate");
+  requestAnimationFrame(() => requestAnimationFrame(() => grid.classList.add("animate")));
+}
+function apply(animate) {
+  const terms = state.q.split(/\s+/).filter(Boolean);
+  let n = 0;
+  JARDINES.forEach((j, i) => {
+    const ok = (state.comuna === "Todas" || j.comuna === state.comuna)
+            && (!state.tardes || j.tardes)
+            && terms.every(t => haystack[i].includes(t));
+    cards[i].hidden = !ok;
+    if (ok) n++;
+  });
+  pills.querySelectorAll(".pill[data-comuna]").forEach(b => b.setAttribute("aria-pressed", b.dataset.comuna === state.comuna));
+  $("#tjToggle").setAttribute("aria-pressed", state.tardes);
+  $("#count").textContent = n === 1 ? "1 establecimiento" : `${n} establecimientos`;
+  $("#empty").classList.toggle("show", n === 0);
+  $("#reset").hidden = state.comuna === "Todas" && !state.q && !state.tardes;
+  if (animate) replay();
+  saveState();
+}
+
+/* Recordar el último filtro en la dirección (#comuna=…) para compartir */
+function saveState() {
+  const h = state.comuna !== "Todas" ? "#comuna=" + encodeURIComponent(state.comuna) : "";
+  if (location.hash !== h) history.replaceState(null, "", h || location.pathname + location.search);
+}
+let pendingJardin = null;
+(function readHash() {
+  const m = /comuna=([^&]+)/.exec(location.hash);
+  if (m) { const c = decodeURIComponent(m[1]); if (COMUNAS.includes(c)) state.comuna = c; }
+  const k = /jardin=([^&]+)/.exec(location.hash);
+  if (k) pendingJardin = document.getElementById("j-" + decodeURIComponent(k[1]));
+})();
+apply(false);
+
+/* Enlace compartido a un jardín: se muestra y resalta al terminar la bienvenida */
+function goToJardin(card) {
+  if (!card) return;
+  card.hidden = false;
+  card.scrollIntoView({ block: "center" });
+  card.classList.remove("flash"); void card.offsetWidth; card.classList.add("flash");
+}
+if (pendingJardin) {
+  if (document.getElementById("splash")) document.addEventListener("splash:done", () => goToJardin(pendingJardin), { once: true });
+  else goToJardin(pendingJardin);
+}
+
+/* ============================================================
+   COMPARTIR UN JARDÍN (menú nativo del celular o copia al portapapeles)
+   ============================================================ */
+grid.addEventListener("click", async e => {
+  const b = e.target.closest("[data-share]"); if (!b) return;
+  const j = JARDINES[+b.closest(".card").dataset.i];
+  const url = location.origin + location.pathname + "#jardin=" + slug(j.nombre);
+  const text = `${j.nombre} · Fundación Integra (${j.comuna})\n${j.direccion}\nFono: ${j.fono} · Celular: ${j.celular}\n${j.correo}`;
+  if (navigator.share) {
+    try { await navigator.share({ title: j.nombre + " · Integra Los Ríos", text, url }); } catch (err) {}
+    return;
+  }
+  try { await navigator.clipboard.writeText(text + "\n" + url); toast("Datos del jardín copiados"); }
+  catch (err) { toast("No fue posible copiar los datos"); }
 });
 
-
 /* ============================================================
-   FILTRO DE COMUNAS
-   ============================================================ */
-function filtrar(comuna, btnActivo) {
-  document.querySelectorAll(".topmenu button").forEach(b => b.classList.remove("active"));
-  if (btnActivo) btnActivo.classList.add("active");
-
-  document.querySelectorAll(".card").forEach(card => {
-    const visible = (comuna === "Todos" || card.dataset.comuna === comuna);
-    card.style.display = visible ? "block" : "none";
-  });
-}
-
-
-/* ============================================================
-   ÍCONO INFO — ACCESIBLE
+   CERCA DE MÍ: ordena los jardines por distancia a la persona
    ============================================================ */
 (function () {
-  const icon = document.getElementById("infoIcon");
-  if (!icon) return;
-
-  const open  = () => { icon.classList.add("active");    icon.setAttribute("aria-expanded", "true"); };
-  const close = () => { icon.classList.remove("active"); icon.setAttribute("aria-expanded", "false"); };
-  const toggle = () => icon.classList.contains("active") ? close() : open();
-
-  icon.addEventListener("click",   e => { e.stopPropagation(); toggle(); });
-  icon.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); } });
-  document.addEventListener("keydown", e => { if (e.key === "Escape") close(); });
-  document.addEventListener("click",   e => { if (!icon.contains(e.target)) close(); });
-})();
-
-
-/* ============================================================
-   TEMA AUTOMÁTICO (respeta preferencia del sistema)
-   ============================================================ */
-if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-  document.body.classList.add("dark");
-}
-
-
-/* ============================================================
-   PWA — INSTALACIÓN AUTOMÁTICA
-   Detecta Android (beforeinstallprompt) o iOS (Safari)
-   ============================================================ */
-(function () {
-  const banner      = document.getElementById("pwa-banner");
-  const installBtn  = document.getElementById("pwa-install-btn");
-  const closeBtn    = document.getElementById("pwa-close-btn");
-  const iosHint     = document.getElementById("pwa-ios-hint");
-
-  // Ya fue descartado antes → no volver a mostrar
-  if (sessionStorage.getItem("pwa-dismissed")) return;
-
-  // ── Android / Chrome / Edge (prompt nativo) ─────────────
-  let deferredPrompt = null;
-
-  window.addEventListener("beforeinstallprompt", e => {
-    e.preventDefault();
-    deferredPrompt = e;
-    // Mostrar banner con pequeño retraso para no interrumpir la carga
-    setTimeout(() => banner.classList.add("show"), 2500);
-  });
-
-  installBtn.addEventListener("click", async () => {
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    deferredPrompt = null;
-    banner.classList.remove("show");
-    if (outcome === "accepted") sessionStorage.setItem("pwa-dismissed", "1");
-  });
-
-  // ── iOS / Safari ─────────────────────────────────────────
-  const isIOS       = /iphone|ipad|ipod/i.test(navigator.userAgent);
-  const isSafari    = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-  const isStandalone = ("standalone" in navigator && navigator.standalone);
-
-  if (isIOS && isSafari && !isStandalone) {
-    setTimeout(() => {
-      banner.classList.add("show");
-      installBtn.textContent = "¿Cómo?";
-    }, 2500);
-
-    installBtn.addEventListener("click", () => {
-      iosHint.classList.toggle("show");
+  const btn = $("#nearBtn"), chip = $("#sortChip");
+  const pos = JARDINES.map(j => coords(j.maps));
+  const rad = d => d * Math.PI / 180;
+  function km([a1, o1], [a2, o2]) {
+    const x = Math.sin(rad(a2 - a1) / 2) ** 2 + Math.cos(rad(a1)) * Math.cos(rad(a2)) * Math.sin(rad(o2 - o1) / 2) ** 2;
+    return 12742 * Math.asin(Math.sqrt(x));
+  }
+  const fmt = new Intl.NumberFormat("es-CL", { maximumFractionDigits: 1 });
+  function off() {
+    grid.append(...cards);
+    cards.forEach(c => c.querySelector(".dist").hidden = true);
+    btn.setAttribute("aria-pressed", "false"); chip.hidden = true;
+  }
+  function on(me) {
+    const d = pos.map(p => p ? km(me, p) : Infinity);
+    cards.forEach((c, i) => {
+      const s = c.querySelector(".dist");
+      s.textContent = "a " + fmt.format(d[i] < 10 ? d[i] : Math.round(d[i])) + " km";
+      s.hidden = !isFinite(d[i]);
     });
-
-    // Ocultar hint al tocar fuera
-    document.addEventListener("click", e => {
-      if (!iosHint.contains(e.target) && e.target !== installBtn) {
-        iosHint.classList.remove("show");
-      }
-    }, true);
+    grid.append(...cards.map((c, i) => [c, d[i]]).sort((a, b) => a[1] - b[1]).map(x => x[0]));
+    btn.setAttribute("aria-pressed", "true"); chip.hidden = false;
+    toResults(); replay();
   }
-
-  // ── Cerrar banner ─────────────────────────────────────────
-  closeBtn.addEventListener("click", () => {
-    banner.classList.remove("show");
-    iosHint.classList.remove("show");
-    sessionStorage.setItem("pwa-dismissed", "1");
+  btn.addEventListener("click", () => {
+    if (btn.getAttribute("aria-pressed") === "true") return off();
+    if (!("geolocation" in navigator)) return toast("Este dispositivo no permite obtener la ubicación");
+    btn.setAttribute("aria-busy", "true");
+    navigator.geolocation.getCurrentPosition(
+      p => { btn.removeAttribute("aria-busy"); on([p.coords.latitude, p.coords.longitude]); toast("Jardines ordenados por cercanía"); },
+      err => { btn.removeAttribute("aria-busy");
+               toast(err.code === 1 ? "Para usar «Cerca de mí», permita el acceso a su ubicación" : "No fue posible obtener su ubicación", 3600); },
+      { enableHighAccuracy: false, timeout: 12000, maximumAge: 300000 }
+    );
   });
-
-  // ── Si ya está instalada no mostrar nada ──────────────────
-  window.addEventListener("appinstalled", () => {
-    banner.classList.remove("show");
-    sessionStorage.setItem("pwa-dismissed", "1");
-  });
+  chip.addEventListener("click", off);
 })();
 
-
-/* ============================================================
-   TOOLTIP FLOTANTE — "Con/Sin Tardes de Juego"
-   Usa un div fixed para no quedar atrapado en .card
-   ============================================================ */
+/* Barra fija: sombra al quedar arriba · en celulares se oculta al bajar
+   y reaparece al subir · botón "volver arriba". Un solo manejador de
+   scroll, pasivo y sincronizado con el refresco de pantalla. */
 (function () {
-  const tip = document.getElementById("tip-box");
-
-  function show(el) {
-    tip.textContent = el.dataset.tip;
-    tip.classList.add("visible");
-    position(el);
-  }
-  function hide() {
-    tip.classList.remove("visible");
-  }
-
-  function position(el) {
-    const rect    = el.getBoundingClientRect();
-    const tipW    = 280;
-    const margin  = 8;
-    const gap     = 10;  // espacio entre badge y tooltip
-
-    // Preferencia: aparecer ARRIBA del badge
-    let top  = rect.top - tip.offsetHeight - gap;
-    let left = rect.left;
-
-    // Si no cabe arriba → aparece abajo
-    if (top < margin) top = rect.bottom + gap;
-
-    // No salirse por la derecha
-    if (left + tipW > window.innerWidth - margin) {
-      left = window.innerWidth - tipW - margin;
+  const tb = $("#toolbar"), fab = $("#fab"), s = document.createElement("div");
+  tb.before(s);
+  let stuck = false;
+  new IntersectionObserver(([e]) => { stuck = !e.isIntersecting; tb.classList.toggle("stuck", stuck); if (!stuck) tb.classList.remove("tb-hidden"); }).observe(s);
+  const mobile = matchMedia("(max-width: 720px)");
+  let lastY = scrollY, ticking = false;
+  function onScroll() {
+    const y = scrollY, dy = y - lastY;
+    if (Math.abs(dy) > 8) {
+      const hide = mobile.matches && stuck && dy > 0 && document.activeElement !== q;
+      tb.classList.toggle("tb-hidden", hide);
+      lastY = y;
     }
-    // No salirse por la izquierda
-    if (left < margin) left = margin;
-
-    tip.style.top  = top  + "px";
-    tip.style.left = left + "px";
+    fab.classList.toggle("show", y > 900);
+    ticking = false;
   }
-
-  document.querySelectorAll(".badge-program").forEach(el => {
-    // Desktop: hover
-    el.addEventListener("mouseenter", () => show(el));
-    el.addEventListener("mouseleave", hide);
-    // Móvil: tap
-    el.addEventListener("click", e => {
-      e.stopPropagation();
-      tip.classList.contains("visible") ? hide() : show(el);
-    });
-  });
-
-  // Tap fuera oculta el tooltip
-  document.addEventListener("click", hide);
+  addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
+  fab.addEventListener("click", () => { tb.classList.remove("tb-hidden"); scrollTo({ top: $("#directorio").offsetTop, behavior: "smooth" }); });
+  q.addEventListener("focus", () => tb.classList.remove("tb-hidden"));
 })();
 
+/* Aviso de conexión */
+addEventListener("offline", () => toast("Sin conexión: se muestra la información guardada en su equipo", 4000));
+addEventListener("online",  () => toast("Conexión restablecida"));
 
-/* El banner ahora es 100% CSS — no se necesita JS para el ajuste de imagen */
+/* ============================================================
+   TEMA CLARO / OSCURO (se recuerda en este equipo)
+   ============================================================ */
+$("#themeBtn").addEventListener("click", () => {
+  const root = document.documentElement;
+  const isDark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = isDark ? "light" : "dark";
+  try { localStorage.setItem("tema", root.dataset.theme); } catch (e) {}
+  document.querySelectorAll('meta[name="theme-color"]').forEach(m => m.content = isDark ? "#2F5FAF" : "#0E1526");
+});
 
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js")
-      .catch(err => console.warn("SW no registrado:", err));
+/* ============================================================
+   TOOLTIP "TARDES DE JUEGO" (un solo elemento para todas las tarjetas)
+   ============================================================ */
+(function () {
+  const tip = $("#tip-box");
+  let current = null;
+  tip.innerHTML = `<b>Tardes de Juego</b>${esc(TARDES_TIP)}`;
+  function show(el) {
+    current = el;
+    tip.classList.add("visible");
+    const r = el.getBoundingClientRect(), w = tip.offsetWidth, h = tip.offsetHeight, m = 8;
+    let top = r.top - h - 10; if (top < m) top = r.bottom + 10;
+    let left = Math.min(Math.max(m, r.left), innerWidth - w - m);
+    tip.style.top = top + "px"; tip.style.left = left + "px";
+  }
+  function hide() { current = null; tip.classList.remove("visible"); }
+  grid.addEventListener("mouseover", e => { const el = e.target.closest("[data-tip]"); if (el && el !== current && matchMedia("(hover: hover)").matches) show(el); });
+  grid.addEventListener("mouseout",  e => { const el = e.target.closest("[data-tip]"); if (el && !el.contains(e.relatedTarget)) hide(); });
+  grid.addEventListener("click", e => { const el = e.target.closest("[data-tip]"); if (!el) return; e.stopPropagation(); current === el ? hide() : show(el); });
+  grid.addEventListener("focusin",  e => { const el = e.target.closest("[data-tip]"); if (el) show(el); });
+  grid.addEventListener("focusout", hide);
+  document.addEventListener("click", hide);
+  addEventListener("scroll", hide, { passive: true });
+  document.addEventListener("keydown", e => { if (e.key === "Escape") hide(); });
+})();
+
+/* ============================================================
+   PWA — INSTALACIÓN (Android: aviso nativo · iOS: instrucción)
+   Se muestra después de la pantalla de inicio.
+   ============================================================ */
+(function () {
+  const banner = $("#pwa-banner"), installBtn = $("#pwa-install-btn"), closeBtn = $("#pwa-close-btn"), iosHint = $("#pwa-ios-hint");
+  const ss = { get: k => { try { return sessionStorage.getItem(k); } catch (e) { return null; } },
+               set: k => { try { sessionStorage.setItem(k, "1"); } catch (e) {} } };
+  const setBanner = v => { banner.classList.toggle("show", v); document.documentElement.classList.toggle("pwa-open", v); };
+  if (ss.get("pwa-dismissed")) return;
+  const later = fn => setTimeout(fn, 6000);
+  let deferred = null;
+
+  addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferred = e; later(() => setBanner(true)); });
+  installBtn.addEventListener("click", async () => {
+    if (!deferred) { iosHint.classList.toggle("show"); return; }
+    deferred.prompt();
+    const { outcome } = await deferred.userChoice;
+    deferred = null; setBanner(false);
+    if (outcome === "accepted") ss.set("pwa-dismissed");
   });
-}
 
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isSafari = /^((?!chrome|android|crios|fxios).)*safari/i.test(navigator.userAgent);
+  if (isIOS && isSafari && !navigator.standalone) {
+    installBtn.textContent = "¿Cómo?";
+    later(() => setBanner(true));
+    document.addEventListener("click", e => { if (!iosHint.contains(e.target) && e.target !== installBtn) iosHint.classList.remove("show"); }, true);
+  }
+  closeBtn.addEventListener("click", () => { setBanner(false); iosHint.classList.remove("show"); ss.set("pwa-dismissed"); });
+  addEventListener("appinstalled", () => { setBanner(false); ss.set("pwa-dismissed"); });
+})();
+
+/* ============================================================
+   SERVICE WORKER (uso sin conexión y carga instantánea)
+   ============================================================ */
+if ("serviceWorker" in navigator && location.protocol !== "file:") {
+  addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(err => console.warn("SW no registrado:", err)));
+}
 </script>
 </body>
 </html>
