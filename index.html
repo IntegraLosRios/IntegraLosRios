@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Jardines Integra · Región de Los Ríos</title>
-<meta name="description" content="Directorio de salas cuna y jardines infantiles de Fundación Integra en la Región de Los Ríos: ubicación, contacto, jornada y sello PEI de cada establecimiento.">
+<meta name="description" content="Plataforma para encontrar su próximo jardín infantil: salas cuna y jardines infantiles gratuitos de Fundación Integra en la Región de Los Ríos, con dirección, contacto, horario de jornada y sello PEI de cada establecimiento.">
 
 <!-- PWA -->
 <link rel="manifest" href="manifest.json">
@@ -207,8 +207,16 @@ html.splash-on .page { opacity: 0; }
   display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; align-items: stretch;
 }
 .intro-text { min-width: 0; }
-@media (min-width: 1000px) {
-  .intro { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 28px; padding-top: 30px; }
+/* Computador: dos columnas de igual alto; el bloque de Reconocimiento
+   Oficial se estira para acompañar a la presentación sin dejar vacíos */
+@media (min-width: 1200px) {
+  .intro { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: clamp(20px, 2.4vw, 40px); padding-top: 30px; align-items: stretch; }
+  .intro-text { display: flex; flex-direction: column; justify-content: center; }
+  .intro .lead { max-width: 72ch; font-size: 17px; }
+  .intro .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .intro .stat { padding: 14px 18px; }
+  .intro .stat b { font-size: 34px; }
+  .intro .stat span { font-size: 14px; }
 }
 .eyebrow {
   display: inline-flex; align-items: center; gap: 8px;
@@ -225,10 +233,21 @@ h1 .accent { color: var(--azul-ink); }
 .lead { margin: 0; max-width: 62ch; color: var(--muted); font-size: 16.5px; }
 @media (max-width: 600px) { .lead { font-size: 15px; line-height: 1.45; } .eyebrow { font-size: 11.5px; } }
 
+/* ¿Qué encontrará? */
+.feats { list-style: none; margin: 14px 0 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.feats li { display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 12px 0 8px; border-radius: 999px; background: var(--surface); box-shadow: var(--shadow-sm); font-size: 13.5px; font-weight: 700; }
+.feats li.feats-k { background: none; box-shadow: none; padding: 0 2px 0 0; color: var(--muted); }
+.feats .ico { font-size: 17px; color: var(--azul-ink); }
+.feats li:nth-child(3) .ico { color: var(--verde-ink); }
+.feats li:nth-child(4) .ico { color: var(--naranjo-ink); }
+.feats li:nth-child(5) .ico { color: var(--rosado-ink); }
+@media (max-width: 600px) { .feats { gap: 6px; flex-wrap: nowrap; } .feats li { height: 32px; font-size: 12.5px; padding: 0 9px 0 6px; gap: 4px; white-space: nowrap; } .feats .ico { font-size: 15px; } .feats li.feats-k { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); padding: 0; } }
+@media (max-width: 379px) { .feats { flex-wrap: wrap; } }
+
 /* Indicadores */
 .stats {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(128px, 1fr)); gap: 10px;
-  margin: 18px 0 0;
+  display: grid; grid-template-columns: repeat(2, minmax(min-content, 1fr)); gap: 10px;
+  margin: 16px 0 0;
 }
 .stat {
   min-width: 0;
@@ -271,11 +290,17 @@ h1 .accent { color: var(--azul-ink); }
 .ro-more[open] summary { margin-bottom: 4px; }
 /* En computador el texto se muestra siempre */
 @media (min-width: 721px) { .ro-more summary { display: none; } }
-@media (min-width: 1000px) {
-  .intro { align-items: center; }
-  .ro { align-items: start; gap: 16px; padding: 20px; }
-  .ro-seal { width: 84px; height: 84px; }
-  .ro-more p { font-size: 14px; }
+/* Requisitos acreditados */
+.ro-req { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.ro-req li { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px 0 8px; border-radius: 999px; font-size: 13px; font-weight: 800; background: var(--surface); border: 1px solid var(--line); color: var(--text); }
+.ro-req .ico { font-size: 16px; color: var(--verde-ink); }
+@media (max-width: 720px) { .ro-req { display: none; } }
+@media (min-width: 1200px) {
+  .ro { align-content: center; gap: clamp(20px, 2vw, 32px); padding: clamp(22px, 2.2vw, 36px); }
+  .ro-seal { width: clamp(120px, 9vw, 168px); height: clamp(120px, 9vw, 168px); }
+  .ro-kicker { font-size: 13.5px; }
+  .ro h2 { font-size: clamp(22px, 1.75vw, 32px); margin-bottom: 10px; }
+  .ro-more p { font-size: clamp(14px, .95vw, 16px); }
 }
 @media (max-width: 600px) {
   .ro { gap: 14px; padding: 14px 16px; border-radius: 18px; }
@@ -699,6 +724,8 @@ html.theme-fade #themeBtn .ico { transition: transform .5s cubic-bezier(.34,1.56
   <symbol id="i-plus-sq" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M12 8v8M8 12h8"/></symbol>
   <symbol id="i-dots" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.4" fill="currentColor"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/><circle cx="12" cy="19" r="1.4" fill="currentColor"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></symbol>
+  <symbol id="i-quote" viewBox="0 0 24 24"><path d="M7 7h4v4c0 3-1.5 5-4 6M14 7h4v4c0 3-1.5 5-4 6"/></symbol>
+  <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.7M12 17h.01"/></symbol>
   <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></symbol>
 </svg>
 
@@ -759,15 +786,21 @@ html.theme-fade #themeBtn .ico { transition: transform .5s cubic-bezier(.34,1.56
 
   <div class="wrap intro">
    <div class="intro-text">
-    <span class="eyebrow">Fundación Integra · Región de Los Ríos</span>
-    <h1>Salas Cuna y Jardines Infantiles <span class="accent">gratuitos</span></h1>
-    <p class="lead">Encuentre el establecimiento más cercano a su familia: dirección, contacto, horario de inicio de jornada y el sello de su Proyecto Educativo Institucional (PEI).</p>
+    <span class="eyebrow">Plataforma de búsqueda · Integra Los Ríos</span>
+    <h1>Encuentre su próximo <span class="accent">jardín infantil</span></h1>
+    <p class="lead">Esta plataforma reúne las salas cuna y jardines infantiles gratuitos de Fundación Integra en la Región de Los Ríos, para que su familia encuentre el más adecuado para sus niñas y niños.</p>
+
+    <ul class="feats" aria-label="Qué encontrará">
+      <li class="feats-k">Encontrará:</li>
+      <li><svg class="ico"><use href="#i-pin"/></svg>Ubicación</li>
+      <li><svg class="ico"><use href="#i-phone"/></svg>Contacto</li>
+      <li><svg class="ico"><use href="#i-clock"/></svg>Horario</li>
+      <li><svg class="ico"><use href="#i-quote"/></svg>Sello PEI</li>
+    </ul>
 
     <div class="stats" id="stats">
       <div class="stat" style="--c:var(--i-azul);--c-ink:var(--azul-ink)"><b id="stTotal">–</b><span>Establecimientos</span></div>
       <div class="stat" style="--c:var(--i-verde);--c-ink:var(--verde-ink)"><b id="stComunas">–</b><span>Comunas</span></div>
-      <div class="stat" style="--c:var(--i-naranjo);--c-ink:var(--naranjo-ink)"><b id="stTardes">–</b><span>Con Tardes de Juego</span></div>
-      <div class="stat" style="--c:var(--i-rosado);--c-ink:var(--rosado-ink)"><b>100%</b><span>Con Reconocimiento Oficial</span></div>
     </div>
    </div>
 
@@ -785,6 +818,11 @@ html.theme-fade #themeBtn .ico { transition: transform .5s cubic-bezier(.34,1.56
           <summary>¿Qué significa?</summary>
           <p>Todos los establecimientos de Fundación Integra en la Región de Los Ríos cuentan con el Reconocimiento Oficial otorgado por el Ministerio de Educación, que acredita el cumplimiento de los requisitos pedagógicos, jurídicos y de infraestructura establecidos por la normativa vigente.</p>
         </details>
+        <ul class="ro-req" aria-label="Requisitos acreditados">
+          <li><svg class="ico"><use href="#i-check"/></svg>Pedagógicos</li>
+          <li><svg class="ico"><use href="#i-check"/></svg>Jurídicos</li>
+          <li><svg class="ico"><use href="#i-check"/></svg>Infraestructura</li>
+        </ul>
       </div>
     </section>
   </div>
@@ -839,13 +877,17 @@ html.theme-fade #themeBtn .ico { transition: transform .5s cubic-bezier(.34,1.56
     <div>
       <h4>Fundación Integra · Región de Los Ríos</h4>
       <p>Red de salas cuna y jardines infantiles gratuitos, con jornada extendida según disponibilidad.</p>
-      <ul><li><a href="tel:+56632631300"><svg class="ico"><use href="#i-phone"/></svg>63 263 13 00</a></li></ul>
+      <ul>
+        <li><a href="tel:+56632631300"><svg class="ico"><use href="#i-phone"/></svg>63 263 13 00 · Dirección Regional</a></li>
+        <li><a href="tel:800540011"><svg class="ico"><use href="#i-phone"/></svg>800 540 011 · Línea gratuita</a></li>
+      </ul>
     </div>
     <div>
       <h4>Enlaces</h4>
       <ul>
         <li><a href="https://www.integra.cl" target="_blank" rel="noopener"><svg class="ico"><use href="#i-globe"/></svg>www.integra.cl</a></li>
         <li><a href="https://geobuscador.integra.cl/" target="_blank" rel="noopener"><svg class="ico"><use href="#i-pin"/></svg>Geobuscador Integra</a></li>
+        <li><a href="https://asi.integra.cl/" target="_blank" rel="noopener"><svg class="ico"><use href="#i-help"/></svg>Sistema de Atención y Solicitudes (ASI)</a></li>
       </ul>
     </div>
     <div>
@@ -858,16 +900,18 @@ html.theme-fade #themeBtn .ico { transition: transform .5s cubic-bezier(.34,1.56
   </div>
   <div class="wrap credits"><span>© 2026 Fundación Integra · Región de Los Ríos</span><span>Creado por: Julio Alveal Tejos</span></div>
   <details class="wrap legal">
-    <summary>Aviso de privacidad: este sitio no utiliza cookies ni herramientas de seguimiento y no recopila datos personales, en conformidad con la Ley N° 19.628 y la Ley N° 21.719 sobre protección de datos personales. <u><span class="mas">Ver aviso completo</span><span class="menos">Ocultar aviso</span></u></summary>
+    <summary>Aviso de privacidad: este sitio no utiliza cookies ni herramientas de seguimiento y no recopila datos personales de sus visitantes. Se rige por la Ley N° 19.628 sobre Protección de la Vida Privada y por la Ley N° 21.719, que entra en vigencia el 1 de diciembre de 2026. <u><span class="mas">Ver aviso completo</span><span class="menos">Ocultar aviso</span></u></summary>
     <div class="legal-body">
-      <p><b>Marco legal.</b> El tratamiento de información en este sitio se ajusta a la Ley N° 19.628 sobre Protección de la Vida Privada y a la Ley N° 21.719, que regula la protección y el tratamiento de los datos personales y crea la Agencia de Protección de Datos Personales.</p>
-      <p><b>Cookies.</b> Este sitio no utiliza cookies propias ni de terceros, ni herramientas de analítica, publicidad o seguimiento de visitas.</p>
-      <p><b>Datos personales.</b> No se solicitan, recopilan ni almacenan datos personales de las personas que lo visitan. La información de contacto publicada corresponde a datos institucionales de los establecimientos de Fundación Integra.</p>
-      <p><b>Almacenamiento en su dispositivo.</b> Para su funcionamiento, el sitio guarda únicamente en su propio equipo: la preferencia de modo claro u oscuro, si cerró el aviso de instalación o ya instaló la app, y una copia de los archivos del sitio para su uso sin conexión. Esta información no se envía a ningún servidor y puede eliminarla en cualquier momento borrando los datos de navegación.</p>
-      <p><b>Ubicación.</b> La función «Cerca de mí» solicita su autorización previa. La ubicación se utiliza solo en su dispositivo para calcular distancias; no se almacena ni se transmite.</p>
-      <p><b>Enlaces externos y alojamiento.</b> Los enlaces a Google Maps, Instagram e integra.cl se rigen por las políticas de privacidad de cada servicio. El proveedor de alojamiento del sitio puede registrar datos técnicos de acceso, como la dirección IP, con fines de seguridad y funcionamiento.</p>
-      <p><b>Sus derechos.</b> Para consultas sobre el tratamiento de datos personales o para ejercer sus derechos de acceso, rectificación, supresión, oposición, portabilidad y bloqueo, puede contactar a Fundación Integra en <a href="https://www.integra.cl" target="_blank" rel="noopener">www.integra.cl</a> o al <a href="tel:+56632631300">63 263 13 00</a>.</p>
-      <p>Última actualización: septiembre de 2026.</p>
+      <p><b>1. Responsable.</b> Fundación Integra (Fundación Educacional para el Desarrollo Integral de la Niñez), RUT 70.574.900-0, con domicilio en Alonso Ovalle 1180, Santiago, a través de su Dirección Regional de Los Ríos.</p>
+      <p><b>2. Normativa aplicable.</b> Artículo 19 N° 4 de la Constitución Política de la República, que asegura la protección de los datos personales; Ley N° 19.628 sobre Protección de la Vida Privada; y Ley N° 21.719, publicada el 13 de diciembre de 2024, que regula la protección y el tratamiento de los datos personales y crea la Agencia de Protección de Datos Personales, cuyas disposiciones rigen a contar del 1 de diciembre de 2026.</p>
+      <p><b>3. Datos que se tratan.</b> Este sitio es informativo: no tiene formularios, registros ni cuentas de usuario, y no solicita, recopila ni almacena datos personales de quienes lo visitan. La información publicada de cada establecimiento (dirección, teléfonos y correo) corresponde a datos de contacto institucionales.</p>
+      <p><b>4. Cookies y seguimiento.</b> No se utilizan cookies propias ni de terceros, ni herramientas de analítica, publicidad, píxeles o seguimiento. Las imágenes y tipografías se entregan desde el mismo sitio, por lo que al visitarlo no se envían solicitudes a servicios de terceros.</p>
+      <p><b>5. Almacenamiento en su dispositivo.</b> Para funcionar, el sitio guarda solo en su propio navegador, y sin datos que lo identifiquen: la preferencia de modo claro u oscuro, si cerró el aviso de instalación o ya instaló la app, y una copia de los archivos del sitio para su uso sin conexión. Esta información no se transmite a Fundación Integra ni a terceros, y puede eliminarla en cualquier momento borrando los datos de navegación del sitio.</p>
+      <p><b>6. Ubicación.</b> La función «Cerca de mí» solo se activa si usted la utiliza y autoriza el permiso de ubicación en su navegador. La ubicación se procesa en su dispositivo para calcular distancias y no se almacena ni se envía a Fundación Integra. El servicio de ubicación del dispositivo o navegador opera según las políticas de su fabricante.</p>
+      <p><b>7. Alojamiento del sitio.</b> El sitio está alojado en GitHub Pages, servicio de GitHub, Inc. (Estados Unidos), que registra la dirección IP de los visitantes con fines de seguridad, conforme a su <a href="https://docs.github.com/es/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener">declaración de privacidad</a>.</p>
+      <p><b>8. Enlaces a otros sitios.</b> Los enlaces a Google Maps, Instagram y otros sitios externos llevan a servicios que se rigen por sus propias políticas de privacidad.</p>
+      <p><b>9. Derechos de los titulares.</b> Usted puede ejercer los derechos que le reconoce la ley: de acceso, rectificación, cancelación y bloqueo, conforme a la Ley N° 19.628, y, desde el 1 de diciembre de 2026, de acceso, rectificación, supresión, oposición, portabilidad y bloqueo, conforme a la Ley N° 21.719. Para hacerlo, puede comunicarse con Fundación Integra a través de la línea gratuita <a href="tel:800540011">800 540 011</a> o de <a href="https://www.integra.cl" target="_blank" rel="noopener">www.integra.cl</a>. Si estima que sus derechos no han sido respetados, puede recurrir a los tribunales de justicia según el artículo 16 de la Ley N° 19.628 y, desde la entrada en vigencia de la Ley N° 21.719, presentar un reclamo ante la Agencia de Protección de Datos Personales.</p>
+      <p><b>10. Actualizaciones.</b> Este aviso puede modificarse para reflejar cambios en el sitio o en la normativa. Última actualización: 24 de septiembre de 2026.</p>
     </div>
   </details>
 </footer>
@@ -1590,7 +1634,6 @@ const haystack = JARDINES.map(j => norm([j.nombre, j.comuna, j.direccion, j.sell
 /* Indicadores */
 $("#stTotal").textContent   = JARDINES.length;
 $("#stComunas").textContent = COMUNAS.length;
-$("#stTardes").textContent  = JARDINES.filter(j => j.tardes).length;
 
 /* ============================================================
    FILTROS: comuna + búsqueda + Tardes de Juego
@@ -1746,7 +1789,8 @@ grid.addEventListener("click", async e => {
   const tb = $("#toolbar"), fab = $("#fab"), s = document.createElement("div");
   tb.before(s);
   let stuck = false;
-  new IntersectionObserver(([e]) => { stuck = !e.isIntersecting; tb.classList.toggle("stuck", stuck); if (!stuck) tb.classList.remove("tb-hidden"); }).observe(s);
+  /* "Fija" solo cuando la marca quedó ARRIBA de la pantalla (no cuando aún está más abajo) */
+  new IntersectionObserver(([e]) => { stuck = !e.isIntersecting && e.boundingClientRect.top < 0; tb.classList.toggle("stuck", stuck); if (!stuck) tb.classList.remove("tb-hidden"); }).observe(s);
   const mobile = matchMedia("(max-width: 720px)");
   let lastY = scrollY, ticking = false;
   function onScroll() {

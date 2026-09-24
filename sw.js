@@ -3,7 +3,7 @@
    Al publicar cambios, suba el número de versión para que
    todos los equipos descarguen la versión nueva.
    ============================================================ */
-const VERSION = "v2.5.0";
+const VERSION = "v2.8.0";
 const CACHE_STATIC = "integra-static-" + VERSION;
 const CACHE_RUNTIME = "integra-runtime-" + VERSION;
 
