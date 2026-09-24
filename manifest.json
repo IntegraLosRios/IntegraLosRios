@@ -1,7 +1,7 @@
 {
   "name": "Jardines Integra · Región de Los Ríos",
   "short_name": "Integra Los Ríos",
-  "description": "Directorio de salas cuna y jardines infantiles de Fundación Integra en la Región de Los Ríos",
+  "description": "Directorio de salas cuna y jardines infantiles de Fundación Integra en la Región de Los Ríos: ubicación, contacto, jornada y sello PEI.",
   "id": "./",
   "start_url": "./index.html",
   "scope": "./",
@@ -44,5 +44,22 @@
         }
       ]
     }
-  ]
+  ],
+  "screenshots": [
+    {
+      "src": "img/captura-narrow.webp",
+      "sizes": "780x1688",
+      "type": "image/webp",
+      "form_factor": "narrow",
+      "label": "Directorio de jardines en el celular"
+    },
+    {
+      "src": "img/captura-wide.webp",
+      "sizes": "1280x800",
+      "type": "image/webp",
+      "form_factor": "wide",
+      "label": "Directorio de jardines en el computador"
+    }
+  ],
+  "prefer_related_applications": false
 }

@@ -127,8 +127,11 @@ html.splash-on body { overflow: hidden; }
 img { max-width: 100%; display: block; }
 a { color: var(--primary); }
 button { font: inherit; color: inherit; }
+[hidden] { display: none !important; }
 .sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
-.wrap { max-width: 1240px; margin: 0 auto; padding: 0 16px; }
+/* Ancho útil: se aprovecha la pantalla hasta 1920 px, con márgenes que
+   crecen suavemente (16 px en celular, hasta 48 px en pantallas grandes) */
+.wrap { max-width: 1920px; margin: 0 auto; padding-left: clamp(16px, 3vw, 48px); padding-right: clamp(16px, 3vw, 48px); }
 .ico { width: 1em; height: 1em; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 :focus-visible { outline: 3px solid var(--i-naranjo); outline-offset: 2px; border-radius: 8px; }
 
@@ -224,7 +227,7 @@ h1 .accent { color: var(--azul-ink); }
 
 /* Indicadores */
 .stats {
-  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(128px, 1fr)); gap: 10px;
   margin: 18px 0 0;
 }
 .stat {
@@ -334,12 +337,16 @@ h1 .accent { color: var(--azul-ink); }
   transition: background .2s, border-color .2s;
 }
 .icon-btn:hover { border-color: var(--i-azul); }
-.icon-btn .sun { display: none; }
-:root[data-theme="dark"] .icon-btn .sun { display: block; }
-:root[data-theme="dark"] .icon-btn .moon { display: none; }
+/* Sol y luna superpuestos: al cambiar de tema giran y se funden */
+#themeBtn { position: relative; overflow: hidden; }
+#themeBtn .ico { position: absolute; transition: transform .5s cubic-bezier(.34,1.56,.64,1), opacity .3s ease; }
+#themeBtn .sun  { opacity: 0; transform: rotate(-90deg) scale(.4); }
+#themeBtn .moon { opacity: 1; transform: none; }
+:root[data-theme="dark"] #themeBtn .sun  { opacity: 1; transform: none; }
+:root[data-theme="dark"] #themeBtn .moon { opacity: 0; transform: rotate(90deg) scale(.4); }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .icon-btn .sun { display: block; }
-  :root:not([data-theme="light"]) .icon-btn .moon { display: none; }
+  :root:not([data-theme="light"]) #themeBtn .sun  { opacity: 1; transform: none; }
+  :root:not([data-theme="light"]) #themeBtn .moon { opacity: 0; transform: rotate(90deg) scale(.4); }
 }
 
 .pills {
@@ -371,9 +378,7 @@ h1 .accent { color: var(--azul-ink); }
 }
 .pill[aria-pressed="true"] { background: var(--pc-ink, var(--azul-ink)); border-color: var(--pc-ink, var(--azul-ink)); color: var(--on-ink); }
 .pill[aria-pressed="true"] .n { background: rgba(0,0,0,.2); color: var(--on-ink); }
-.pill.toggle[aria-pressed="true"] { --pc-ink: var(--verde-ink); }
-.pill.toggle .ico { font-size: 16px; }
-.pills .sep { flex: none; width: 2px; margin: 8px 2px; border-radius: 2px; background: var(--line); }
+
 
 .results-bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 6px 12px; min-height: 44px; padding: 8px 0 2px; color: var(--muted); font-weight: 700; font-size: 14px; }
 .results-bar .right { display: flex; align-items: center; gap: 4px 10px; flex-wrap: wrap-reverse; justify-content: flex-end; margin-left: auto; }
@@ -385,7 +390,7 @@ h1 .accent { color: var(--azul-ink); }
    GRILLA DE TARJETAS
    ============================================================= */
 .grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 310px), 1fr));
   gap: 16px; padding: 8px 0 40px;
 }
 .card {
@@ -466,7 +471,7 @@ h1 .accent { color: var(--azul-ink); }
 }
 .btn:active { transform: scale(.97); }
 .btn .ico { font-size: 18px; }
-.btn-primary { background: var(--cc-ink); color: var(--on-ink); }
+.btn-primary { background: var(--cc-ink); color: var(--on-ink); padding: 0 12px; }
 .btn-primary:hover { filter: brightness(1.08); }
 .btn-ghost { width: 44px; padding: 0; border-color: var(--line); background: var(--surface); color: var(--cc-ink); }
 .btn-ghost:hover { border-color: var(--cc); }
@@ -549,15 +554,27 @@ html.pwa-open .toast { bottom: calc(160px + env(safe-area-inset-bottom)); }
    ============================================================= */
 footer { background: #1F2A44; color: #D8DEEA; margin-top: 10px; }
 footer .stripe { height: 5px; }
-.foot { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 28px; padding: 32px 16px 20px; }
+.foot { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 28px; padding-top: 32px; padding-bottom: 20px; }
 .foot h4 { font-family: var(--font-head); color: #fff; font-size: 18px; margin: 0 0 8px; }
 .foot p { margin: 0 0 6px; font-size: 14px; }
 .foot a { color: #fff; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; padding: 4px 0; }
 .foot a:hover { color: var(--logo-amarillo); }
 .foot ul { list-style: none; margin: 0; padding: 0; }
 .foot .ico { font-size: 17px; }
-.credits { border-top: 1px solid rgba(255,255,255,.12); padding: 14px 16px calc(18px + env(safe-area-inset-bottom)); font-size: 13px; color: #A9B3C7; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; }
+.credits { border-top: 1px solid rgba(255,255,255,.12); padding-top: 14px; padding-bottom: 12px; font-size: 13px; color: #A9B3C7; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; }
 @media (max-width: 720px) { .foot { grid-template-columns: 1fr; gap: 20px; } }
+
+/* Aviso legal de privacidad (letra pequeña al final) */
+.legal { padding-top: 10px; padding-bottom: calc(80px + env(safe-area-inset-bottom)); /* espacio para que el botón «volver arriba» no tape el texto */ border-top: 1px solid rgba(255,255,255,.08); font-size: 11px; line-height: 1.55; color: #A9B3C7; }
+.legal summary { cursor: pointer; list-style: none; }
+.legal summary::-webkit-details-marker { display: none; }
+.legal summary u { color: #D8DEEA; text-underline-offset: 2px; white-space: nowrap; }
+.legal[open] summary u .mas { display: none; }
+.legal:not([open]) summary u .menos { display: none; }
+.legal-body { margin-top: 8px; max-width: 110ch; }
+.legal-body p { margin: 0 0 5px; }
+.legal-body b { color: #D8DEEA; font-weight: 700; }
+.legal a { color: #D8DEEA; }
 
 /* =============================================================
    BANNER DE INSTALACIÓN PWA
@@ -575,15 +592,81 @@ footer .stripe { height: 5px; }
 #pwa-banner .pwa-text { flex: 1; min-width: 0; }
 #pwa-banner strong { display: block; font-size: 15px; }
 #pwa-banner span { font-size: 13px; color: var(--muted); }
-#pwa-banner .pwa-install { border: 0; border-radius: 999px; background: var(--azul-ink); color: var(--on-ink); font-weight: 800; padding: 10px 16px; cursor: pointer; }
+#pwa-banner .pwa-install { border: 0; border-radius: 999px; background: var(--verde-ink); color: var(--on-ink); font-weight: 800; padding: 10px 16px; cursor: pointer; }
 #pwa-banner .pwa-close { border: 0; background: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 18px; color: var(--muted); }
-#pwa-ios-hint {
-  display: none; position: fixed; left: 50%; bottom: calc(96px + env(safe-area-inset-bottom)); transform: translateX(-50%);
-  z-index: 9600; background: #1F2A44; color: #fff; padding: 12px 18px; border-radius: 14px;
-  font-size: 14px; text-align: center; max-width: 290px; line-height: 1.5; box-shadow: var(--shadow-md);
+
+/* Botón "Instalar app" (solo aparece si la app NO está instalada) */
+.install-btn {
+  flex: none; height: 48px; padding: 0 16px 0 14px; border-radius: 999px; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 8px; position: relative;
+  border: 2px solid var(--verde-ink); background: var(--verde-ink); color: var(--on-ink);
+  font-weight: 800; font-size: 14.5px; white-space: nowrap;
+  transition: filter .15s, transform .15s;
 }
-#pwa-ios-hint.show { display: block; }
+.install-btn[hidden] { display: none; }
+.install-btn:hover { filter: brightness(1.08); }
+.install-btn:active { transform: scale(.97); }
+.install-btn .ico { font-size: 20px; }
+.install-btn .dot {
+  position: absolute; top: 4px; right: 4px; width: 10px; height: 10px; border-radius: 50%;
+  background: var(--logo-amarillo); box-shadow: 0 0 0 2px var(--bg); animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse { 50% { transform: scale(1.35); opacity: .7; } }
+@media (max-width: 720px) {
+  .install-btn { width: 46px; height: 46px; padding: 0; justify-content: center; }
+  .install-btn .lbl { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+}
+.foot-install { border: 0; background: none; padding: 4px 0; color: #fff; font-weight: 700; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
+.foot-install[hidden] { display: none; }
+.foot-install:hover { color: var(--logo-amarillo); }
+
+/* Hoja de instrucciones de instalación */
+.sheet {
+  border: 0; padding: 0; margin: auto; width: min(460px, calc(100vw - 24px)); max-height: calc(100dvh - 24px);
+  background: var(--surface); color: var(--text); border-radius: 22px; box-shadow: 0 24px 60px rgba(0,0,0,.35);
+  overflow: auto;
+}
+.sheet[open] { animation: sheetIn .32s cubic-bezier(.2,.8,.2,1); }
+.sheet::backdrop { background: rgba(14,21,38,.55); }
+@media (max-width: 600px) {
+  .sheet { margin: auto auto calc(10px + env(safe-area-inset-bottom)); width: calc(100vw - 20px); }
+}
+@keyframes sheetIn { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+.sheet-head { display: flex; align-items: center; gap: 12px; padding: 18px 18px 8px; }
+.sheet-head img { width: 52px; height: 52px; border-radius: 14px; flex: none; box-shadow: var(--shadow-sm); }
+.sheet-head strong { display: block; font-family: var(--font-head); font-size: 19px; line-height: 1.15; }
+.sheet-head span { display: block; margin-top: 2px; font-size: 13.5px; line-height: 1.3; color: var(--muted); }
+.sheet-x { margin-left: auto; align-self: flex-start; width: 36px; height: 36px; border: 0; border-radius: 50%; background: var(--surface-2); cursor: pointer; display: grid; place-items: center; color: var(--muted); flex: none; }
+.benefits { list-style: none; margin: 6px 18px 0; padding: 12px 14px; border-radius: 14px; background: var(--surface-2); display: grid; gap: 6px; font-size: 14px; font-weight: 600; }
+.benefits li { display: flex; gap: 8px; align-items: center; }
+.benefits .ico { color: var(--verde-ink); font-size: 17px; }
+.steps { margin: 14px 18px 0; padding: 0; list-style: none; counter-reset: s; display: grid; gap: 10px; }
+.steps li { counter-increment: s; display: grid; grid-template-columns: 30px 1fr; gap: 10px; align-items: start; font-size: 15px; line-height: 1.4; }
+.steps li::before {
+  content: counter(s); width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--azul-ink); color: var(--on-ink); font-weight: 800; font-size: 14px;
+}
+.steps .k { display: inline-flex; align-items: center; gap: 4px; padding: 1px 8px; border-radius: 8px; background: var(--surface-2); border: 1px solid var(--line); font-weight: 800; white-space: nowrap; }
+.steps .k .ico { font-size: 16px; color: var(--azul-ink); }
+.sheet-note { margin: 12px 18px 0; font-size: 13px; color: var(--muted); }
+.sheet-actions { display: flex; gap: 10px; padding: 16px 18px 18px; }
+.sheet-actions .btn { flex: 1; }
+.sheet-actions .btn-primary { --cc-ink: var(--verde-ink); }
+.sheet-actions .btn-ghost { width: auto; color: var(--text); }
 @keyframes slideUp { from { transform: translateY(120%); opacity: 0; } to { transform: none; opacity: 1; } }
+
+/* =============================================================
+   TRANSICIÓN ENTRE MODO CLARO Y OSCURO
+   Navegadores modernos: el nuevo tema se expande en círculo desde
+   el botón. Resto: los colores se funden suavemente.
+   ============================================================= */
+::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+::view-transition-old(root) { z-index: 1; }
+::view-transition-new(root) { z-index: 2; }
+html.theme-fade, html.theme-fade *, html.theme-fade *::before, html.theme-fade *::after {
+  transition: background-color .45s ease, color .45s ease, border-color .45s ease, box-shadow .45s ease, fill .45s ease, stroke .45s ease !important;
+}
+html.theme-fade #themeBtn .ico { transition: transform .5s cubic-bezier(.34,1.56,.64,1), opacity .3s ease !important; }
 
 /* Movimiento reducido: sin desenfoques ni desplazamientos */
 @media (prefers-reduced-motion: reduce) {
@@ -611,6 +694,11 @@ footer .stripe { height: 5px; }
   <symbol id="i-locate" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2.5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></symbol>
   <symbol id="i-share" viewBox="0 0 24 24"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.2 10.8 7.6-4.4M8.2 13.2l7.6 4.4"/></symbol>
   <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></symbol>
+  <symbol id="i-install" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M12 7v7M9 11l3 3 3-3M10 18h4"/></symbol>
+  <symbol id="i-ios-share" viewBox="0 0 24 24"><path d="M12 3v12M8 7l4-4 4 4"/><path d="M8 10H6a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-9a1 1 0 0 0-1-1h-2"/></symbol>
+  <symbol id="i-plus-sq" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M12 8v8M8 12h8"/></symbol>
+  <symbol id="i-dots" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.4" fill="currentColor"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/><circle cx="12" cy="19" r="1.4" fill="currentColor"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></symbol>
   <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></symbol>
 </svg>
 
@@ -715,6 +803,9 @@ footer .stripe { height: 5px; }
           <input id="q" type="search" inputmode="search" enterkeyhint="search" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="Buscar jardín o calle…">
           <button class="clear" id="qClear" type="button" aria-label="Borrar búsqueda"><svg class="ico"><use href="#i-x"/></svg></button>
         </label>
+        <button class="install-btn" id="installBtn" type="button" hidden aria-label="Instalar la app en este dispositivo" title="Instalar la app en este dispositivo">
+          <svg class="ico" aria-hidden="true"><use href="#i-install"/></svg><span class="lbl">Instalar app</span><span class="dot" aria-hidden="true"></span>
+        </button>
         <button class="icon-btn" id="nearBtn" type="button" aria-pressed="false" aria-label="Ordenar por cercanía a mi ubicación" title="Cerca de mí">
           <svg class="ico"><use href="#i-locate"/></svg>
         </button>
@@ -759,10 +850,26 @@ footer .stripe { height: 5px; }
     </div>
     <div>
       <h4>Síganos</h4>
-      <ul><li><a href="https://www.instagram.com/integra_losrios?igsh=MTFnd3Yzam0wc3Awaw==" target="_blank" rel="noopener"><svg class="ico"><use href="#i-insta"/></svg>@integra_losrios</a></li></ul>
+      <ul>
+        <li><a href="https://www.instagram.com/integra_losrios?igsh=MTFnd3Yzam0wc3Awaw==" target="_blank" rel="noopener"><svg class="ico"><use href="#i-insta"/></svg>@integra_losrios</a></li>
+        <li><button class="foot-install" id="footInstall" type="button" hidden><svg class="ico"><use href="#i-install"/></svg>Instalar la app</button></li>
+      </ul>
     </div>
   </div>
   <div class="wrap credits"><span>© 2026 Fundación Integra · Región de Los Ríos</span><span>Creado por: Julio Alveal Tejos</span></div>
+  <details class="wrap legal">
+    <summary>Aviso de privacidad: este sitio no utiliza cookies ni herramientas de seguimiento y no recopila datos personales, en conformidad con la Ley N° 19.628 y la Ley N° 21.719 sobre protección de datos personales. <u><span class="mas">Ver aviso completo</span><span class="menos">Ocultar aviso</span></u></summary>
+    <div class="legal-body">
+      <p><b>Marco legal.</b> El tratamiento de información en este sitio se ajusta a la Ley N° 19.628 sobre Protección de la Vida Privada y a la Ley N° 21.719, que regula la protección y el tratamiento de los datos personales y crea la Agencia de Protección de Datos Personales.</p>
+      <p><b>Cookies.</b> Este sitio no utiliza cookies propias ni de terceros, ni herramientas de analítica, publicidad o seguimiento de visitas.</p>
+      <p><b>Datos personales.</b> No se solicitan, recopilan ni almacenan datos personales de las personas que lo visitan. La información de contacto publicada corresponde a datos institucionales de los establecimientos de Fundación Integra.</p>
+      <p><b>Almacenamiento en su dispositivo.</b> Para su funcionamiento, el sitio guarda únicamente en su propio equipo: la preferencia de modo claro u oscuro, si cerró el aviso de instalación o ya instaló la app, y una copia de los archivos del sitio para su uso sin conexión. Esta información no se envía a ningún servidor y puede eliminarla en cualquier momento borrando los datos de navegación.</p>
+      <p><b>Ubicación.</b> La función «Cerca de mí» solicita su autorización previa. La ubicación se utiliza solo en su dispositivo para calcular distancias; no se almacena ni se transmite.</p>
+      <p><b>Enlaces externos y alojamiento.</b> Los enlaces a Google Maps, Instagram e integra.cl se rigen por las políticas de privacidad de cada servicio. El proveedor de alojamiento del sitio puede registrar datos técnicos de acceso, como la dirección IP, con fines de seguridad y funcionamiento.</p>
+      <p><b>Sus derechos.</b> Para consultas sobre el tratamiento de datos personales o para ejercer sus derechos de acceso, rectificación, supresión, oposición, portabilidad y bloqueo, puede contactar a Fundación Integra en <a href="https://www.integra.cl" target="_blank" rel="noopener">www.integra.cl</a> o al <a href="tel:+56632631300">63 263 13 00</a>.</p>
+      <p>Última actualización: septiembre de 2026.</p>
+    </div>
+  </details>
 </footer>
 
 </div><!-- /.page -->
@@ -771,14 +878,33 @@ footer .stripe { height: 5px; }
 <button class="fab" id="fab" type="button" aria-label="Volver arriba"><svg class="ico"><use href="#i-up"/></svg></button>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<!-- BANNER PWA — instalación en Android / iOS -->
+<!-- AVISO DE INSTALACIÓN (solo si la app no está instalada en el dispositivo) -->
 <div id="pwa-banner" role="dialog" aria-label="Instalar aplicación">
   <img src="img/icon-96.webp" alt="" width="44" height="44" loading="lazy">
-  <div class="pwa-text"><strong>Instalar la app</strong><span>Jardines Integra Los Ríos</span></div>
+  <div class="pwa-text"><strong>Instale la app</strong><span>Acceso directo y uso sin conexión</span></div>
   <button class="pwa-install" id="pwa-install-btn" type="button">Instalar</button>
-  <button class="pwa-close" id="pwa-close-btn" type="button" aria-label="Cerrar">✕</button>
+  <button class="pwa-close" id="pwa-close-btn" type="button" aria-label="Ahora no">✕</button>
 </div>
-<div id="pwa-ios-hint" role="tooltip">Toque <strong>Compartir</strong> (□↑) y luego<br><strong>«Agregar a pantalla de inicio»</strong></div>
+
+<!-- INSTRUCCIONES DE INSTALACIÓN (navegadores sin instalación automática) -->
+<dialog class="sheet" id="installSheet" aria-labelledby="isTitle">
+  <div class="sheet-head">
+    <img src="img/icon-96.webp" alt="" width="52" height="52">
+    <div><strong id="isTitle">Instalar Integra Los Ríos</strong><span>Gratis · sin tiendas de aplicaciones</span></div>
+    <button class="sheet-x" type="button" data-close aria-label="Cerrar"><svg class="ico"><use href="#i-x"/></svg></button>
+  </div>
+  <ul class="benefits">
+    <li><svg class="ico"><use href="#i-check"/></svg>Acceso directo desde su pantalla de inicio</li>
+    <li><svg class="ico"><use href="#i-check"/></svg>Consulta de jardines aun sin conexión</li>
+    <li><svg class="ico"><use href="#i-check"/></svg>Se abre a pantalla completa, como una app</li>
+  </ul>
+  <ol class="steps" id="isSteps"></ol>
+  <p class="sheet-note" id="isNote" hidden></p>
+  <div class="sheet-actions">
+    <button class="btn btn-primary" type="button" id="isCopy" hidden>Copiar enlace</button>
+    <button class="btn btn-ghost" type="button" data-close>Entendido</button>
+  </div>
+</dialog>
 
 <script>
 /* ============================================================
@@ -1469,7 +1595,7 @@ $("#stTardes").textContent  = JARDINES.filter(j => j.tardes).length;
 /* ============================================================
    FILTROS: comuna + búsqueda + Tardes de Juego
    ============================================================ */
-const state = { comuna: "Todas", q: "", tardes: false };
+const state = { comuna: "Todas", q: "" };
 const pills = $("#pills");
 const countBy = COMUNAS.reduce((o, c) => (o[c] = JARDINES.filter(j => j.comuna === c).length, o), {});
 const inkVar = ["--azul-ink", "--verde-ink", "--rosado-ink", "--morado-ink", "--naranjo-ink"];
@@ -1477,7 +1603,6 @@ const colVar = ["--i-azul", "--i-verde", "--i-rosado", "--i-morado", "--i-naranj
 
 pills.innerHTML =
   `<button type="button" class="pill" data-comuna="Todas" aria-pressed="true">Todas las comunas <span class="n">${JARDINES.length}</span></button>` +
-  `<span class="sep" aria-hidden="true"></span><button type="button" class="pill toggle" id="tjToggle" aria-pressed="false">${ico("sun-sm")}Tardes de Juego</button><span class="sep" aria-hidden="true"></span>` +
   COMUNAS.map((c, i) => `<button type="button" class="pill" data-comuna="${esc(c)}" aria-pressed="false"
      style="--pc:var(${colVar[i % 5]});--pc-ink:var(${inkVar[i % 5]})">${esc(c)} <span class="n">${countBy[c]}</span></button>`).join("");
 
@@ -1493,9 +1618,11 @@ pills.addEventListener("click", e => {
   pills.scrollBy({ left: r.left - pr.left - (pr.width - r.width) / 2, behavior: "smooth" });
   apply(true); toResults();
 });
-$("#tjToggle").addEventListener("click", () => { state.tardes = !state.tardes; apply(true); toResults(); });
 
 const q = $("#q"), qBox = $("#searchBox");
+/* En pantallas angostas, texto de ayuda más corto para que no se corte */
+const setPh = () => { q.placeholder = innerWidth < 430 ? "Buscar…" : "Buscar jardín o calle…"; };
+setPh(); addEventListener("resize", setPh, { passive: true });
 let qTimer;
 q.addEventListener("input", () => {
   qBox.classList.toggle("has-value", !!q.value);
@@ -1504,7 +1631,7 @@ q.addEventListener("input", () => {
 });
 q.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); q.blur(); toResults(); } });
 $("#qClear").addEventListener("click", () => { q.value = ""; qBox.classList.remove("has-value"); state.q = ""; apply(false); q.focus(); });
-$("#reset").addEventListener("click", () => { q.value = ""; qBox.classList.remove("has-value"); Object.assign(state, { comuna: "Todas", q: "", tardes: false }); apply(true); });
+$("#reset").addEventListener("click", () => { q.value = ""; qBox.classList.remove("has-value"); Object.assign(state, { comuna: "Todas", q: "" }); apply(true); });
 
 /* Reinicia la animación de entrada sin forzar recálculos de diseño */
 function replay() {
@@ -1516,16 +1643,14 @@ function apply(animate) {
   let n = 0;
   JARDINES.forEach((j, i) => {
     const ok = (state.comuna === "Todas" || j.comuna === state.comuna)
-            && (!state.tardes || j.tardes)
             && terms.every(t => haystack[i].includes(t));
     cards[i].hidden = !ok;
     if (ok) n++;
   });
   pills.querySelectorAll(".pill[data-comuna]").forEach(b => b.setAttribute("aria-pressed", b.dataset.comuna === state.comuna));
-  $("#tjToggle").setAttribute("aria-pressed", state.tardes);
   $("#count").textContent = n === 1 ? "1 establecimiento" : `${n} establecimientos`;
   $("#empty").classList.toggle("show", n === 0);
-  $("#reset").hidden = state.comuna === "Todas" && !state.q && !state.tardes;
+  $("#reset").hidden = state.comuna === "Todas" && !state.q;
   if (animate) replay();
   saveState();
 }
@@ -1646,13 +1771,48 @@ addEventListener("online",  () => toast("Conexión restablecida"));
 /* ============================================================
    TEMA CLARO / OSCURO (se recuerda en este equipo)
    ============================================================ */
-$("#themeBtn").addEventListener("click", () => {
-  const root = document.documentElement;
-  const isDark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
-  root.dataset.theme = isDark ? "light" : "dark";
-  try { localStorage.setItem("tema", root.dataset.theme); } catch (e) {}
-  document.querySelectorAll('meta[name="theme-color"]').forEach(m => m.content = isDark ? "#2F5FAF" : "#0E1526");
-});
+(function () {
+  const root = document.documentElement, btn = $("#themeBtn");
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)");
+  let busy = false;
+  const isDark = () => root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  function applyTheme(next) {
+    root.dataset.theme = next;
+    try { localStorage.setItem("tema", next); } catch (e) {}
+    document.querySelectorAll('meta[name="theme-color"]').forEach(m => m.content = next === "dark" ? "#0E1526" : "#2F5FAF");
+    label();
+  }
+  const label = () => { const l = isDark() ? "Cambiar a modo claro" : "Cambiar a modo oscuro"; btn.setAttribute("aria-label", l); btn.title = l; };
+  label();
+  btn.addEventListener("click", () => {
+    if (busy) return;
+    const next = isDark() ? "light" : "dark";
+    $("#tip-box").classList.remove("visible");
+    if (reduce.matches) return applyTheme(next);
+
+    /* Círculo que se expande desde el botón (Chrome, Edge, Safari 18+) */
+    if (document.startViewTransition) {
+      const r = btn.getBoundingClientRect();
+      const x = r.left + r.width / 2, y = r.top + r.height / 2;
+      const end = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+      busy = true;
+      const vt = document.startViewTransition(() => applyTheme(next));
+      vt.ready.then(() => {
+        root.animate(
+          { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${end}px at ${x}px ${y}px)`] },
+          { duration: 600, easing: "cubic-bezier(.4, 0, .2, 1)", pseudoElement: "::view-transition-new(root)" }
+        );
+      }).catch(() => {});
+      vt.finished.finally(() => { busy = false; });
+      return;
+    }
+
+    /* Otros navegadores: fundido de colores */
+    root.classList.add("theme-fade");
+    applyTheme(next);
+    setTimeout(() => root.classList.remove("theme-fade"), 500);
+  });
+})();
 
 /* ============================================================
    TOOLTIP "TARDES DE JUEGO" (un solo elemento para todas las tarjetas)
@@ -1681,36 +1841,133 @@ $("#themeBtn").addEventListener("click", () => {
 })();
 
 /* ============================================================
-   PWA — INSTALACIÓN (Android: aviso nativo · iOS: instrucción)
-   Se muestra después de la pantalla de inicio.
+   INSTALACIÓN COMO APP (PWA)
+   1. Detecta si ya está instalada (se abrió como app, o el navegador
+      no ofrece instalarla) → no muestra nada.
+   2. Si no lo está: botón «Instalar app» en la barra, enlace en el pie
+      y un aviso inferior (se puede cerrar; vuelve a los 14 días).
+   3. Chrome, Edge, Samsung Internet: abre el instalador nativo.
+      iPhone/iPad, Firefox, Safari en Mac y navegadores dentro de
+      Instagram/Facebook/WhatsApp: muestra instrucciones paso a paso.
    ============================================================ */
 (function () {
-  const banner = $("#pwa-banner"), installBtn = $("#pwa-install-btn"), closeBtn = $("#pwa-close-btn"), iosHint = $("#pwa-ios-hint");
-  const ss = { get: k => { try { return sessionStorage.getItem(k); } catch (e) { return null; } },
-               set: k => { try { sessionStorage.setItem(k, "1"); } catch (e) {} } };
-  const setBanner = v => { banner.classList.toggle("show", v); document.documentElement.classList.toggle("pwa-open", v); };
-  if (ss.get("pwa-dismissed")) return;
-  const later = fn => setTimeout(fn, 6000);
-  let deferred = null;
+  const root = document.documentElement;
+  const btn = $("#installBtn"), foot = $("#footInstall");
+  const banner = $("#pwa-banner"), bannerBtn = $("#pwa-install-btn"), bannerClose = $("#pwa-close-btn");
+  const sheet = $("#installSheet"), steps = $("#isSteps"), note = $("#isNote"), copyBtn = $("#isCopy");
+  const ls = {
+    get: k => { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} },
+    del: k => { try { localStorage.removeItem(k); } catch (e) {} }
+  };
+  const ua = navigator.userAgent;
+  const is = {
+    ios:      /iphone|ipad|ipod/i.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1),
+    android:  /android/i.test(ua),
+    inApp:    /FBAN|FBAV|FB_IAB|Instagram|WhatsApp|Line\/|TikTok|Snapchat|; wv\)/i.test(ua),
+    firefox:  /firefox|fxios/i.test(ua),
+    iosOther: /CriOS|FxiOS|EdgiOS|OPiOS/i.test(ua),
+    macSafari: /Macintosh/.test(ua) && !(navigator.maxTouchPoints > 1) && /Version\/(1[7-9]|[2-9]\d)/.test(ua) && /Safari/.test(ua) && !/Chrome|Chromium|Edg/.test(ua)
+  };
 
-  addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferred = e; later(() => setBanner(true)); });
-  installBtn.addEventListener("click", async () => {
-    if (!deferred) { iosHint.classList.toggle("show"); return; }
-    deferred.prompt();
-    const { outcome } = await deferred.userChoice;
-    deferred = null; setBanner(false);
-    if (outcome === "accepted") ss.set("pwa-dismissed");
+  /* ¿Se está usando como app instalada? */
+  const standalone = () =>
+    ["standalone", "fullscreen", "minimal-ui", "window-controls-overlay"].some(m => matchMedia(`(display-mode: ${m})`).matches)
+    || navigator.standalone === true || document.referrer.startsWith("android-app://");
+
+  let deferred = null, mode = null;
+
+  function show(m) {
+    if (standalone()) return hide();
+    mode = m;
+    btn.hidden = false; foot.hidden = false;
+    const t0 = +ls.get("pwa-dismissed-at") || 0;
+    if (Date.now() - t0 > 14 * 864e5) {
+      const open = () => setTimeout(() => { if (mode) setBanner(true); }, 4000);
+      document.getElementById("splash") ? document.addEventListener("splash:done", open, { once: true }) : open();
+    }
+  }
+  function hide() { mode = null; btn.hidden = true; foot.hidden = true; setBanner(false); }
+  function setBanner(v) { banner.classList.toggle("show", v); root.classList.toggle("pwa-open", v); }
+
+  const K = (icon, txt) => `<span class="k">${icon ? ico(icon) : ""}${txt}</span>`;
+  const GUIDES = {
+    "ios-safari": {
+      steps: [`Toque ${K("ios-share", "Compartir")} en la barra inferior de Safari.`,
+              `Deslice hacia abajo y elija ${K("plus-sq", "Agregar a inicio")}.`,
+              `Confirme con ${K("", "Agregar")}. El ícono aparecerá en su pantalla de inicio.`] },
+    "ios-other": {
+      steps: [`Toque ${K("ios-share", "Compartir")} (en Chrome está junto a la barra de dirección).`,
+              `Elija ${K("plus-sq", "Agregar a inicio")}.`,
+              `Confirme con ${K("", "Agregar")}.`],
+      note: "Si no aparece la opción, abra esta página en Safari y repita los pasos." },
+    "firefox-android": {
+      steps: [`Toque el menú ${K("dots", "")} de Firefox.`,
+              `Elija ${K("", "Instalar")} o ${K("", "Agregar a pantalla de inicio")}.`,
+              `Confirme con ${K("", "Agregar")}.`] },
+    "mac-safari": {
+      steps: [`En la barra de menú, abra ${K("", "Archivo")}.`,
+              `Elija ${K("", "Agregar al Dock…")}.`,
+              `Confirme con ${K("", "Agregar")}. La app quedará en su Dock.`] },
+    "in-app": {
+      steps: [`Toque el menú ${K("dots", "")} de esta ventana (arriba a la derecha).`,
+              `Elija ${K("", is.ios ? "Abrir en Safari" : "Abrir en Chrome")} o «Abrir en el navegador».`,
+              `Allí toque ${K("install", "Instalar app")} en esta misma página.`],
+      note: "Las apps como Instagram, Facebook o WhatsApp abren las páginas en un navegador interno que no permite instalar. También puede copiar el enlace y pegarlo en su navegador.",
+      copy: true }
+  };
+
+  function openGuide() {
+    const g = GUIDES[mode]; if (!g) return;
+    steps.innerHTML = g.steps.map(s => `<li><span>${s}</span></li>`).join("");
+    note.hidden = !g.note; note.textContent = g.note || "";
+    copyBtn.hidden = !g.copy;
+    setBanner(false);
+    if (sheet.showModal) sheet.showModal(); else sheet.setAttribute("open", "");
+  }
+  function closeGuide() { if (sheet.close) sheet.close(); else sheet.removeAttribute("open"); }
+  sheet.addEventListener("click", e => { if (e.target === sheet || e.target.closest("[data-close]")) closeGuide(); });
+  copyBtn.addEventListener("click", async () => {
+    try { await navigator.clipboard.writeText(location.origin + location.pathname); toast("Enlace copiado. Péguelo en su navegador"); }
+    catch (e) { toast("No fue posible copiar el enlace"); }
   });
 
-  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-  const isSafari = /^((?!chrome|android|crios|fxios).)*safari/i.test(navigator.userAgent);
-  if (isIOS && isSafari && !navigator.standalone) {
-    installBtn.textContent = "¿Cómo?";
-    later(() => setBanner(true));
-    document.addEventListener("click", e => { if (!iosHint.contains(e.target) && e.target !== installBtn) iosHint.classList.remove("show"); }, true);
+  async function install() {
+    if (deferred) {                               /* Instalador nativo */
+      setBanner(false);
+      deferred.prompt();
+      const { outcome } = await deferred.userChoice.catch(() => ({ outcome: "dismissed" }));
+      deferred = null;
+      if (outcome === "accepted") hide();
+      return;
+    }
+    openGuide();                                  /* Instrucciones */
   }
-  closeBtn.addEventListener("click", () => { setBanner(false); iosHint.classList.remove("show"); ss.set("pwa-dismissed"); });
-  addEventListener("appinstalled", () => { setBanner(false); ss.set("pwa-dismissed"); });
+  [btn, foot, bannerBtn].forEach(b => b.addEventListener("click", install));
+  bannerClose.addEventListener("click", () => { setBanner(false); ls.set("pwa-dismissed-at", String(Date.now())); });
+
+  /* Chrome / Edge / Samsung: el navegador avisa que se puede instalar
+     (si ya está instalada, este aviso no llega y no se muestra nada) */
+  addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferred = e; ls.del("pwa-installed"); show("prompt"); });
+  addEventListener("appinstalled", () => {
+    ls.set("pwa-installed", "1"); deferred = null; hide();
+    toast("App instalada. Puede abrirla desde su pantalla de inicio o escritorio", 4200);
+  });
+
+  /* Si se abre como app, se oculta todo; si luego se vuelve a la pestaña, se revalúa */
+  ["standalone", "minimal-ui"].forEach(m => {
+    const mq = matchMedia(`(display-mode: ${m})`);
+    mq.addEventListener && mq.addEventListener("change", () => { if (standalone()) hide(); });
+  });
+
+  if (standalone()) { root.classList.add("is-app"); ls.set("pwa-installed", "1"); return; }
+
+  /* Navegadores sin instalador nativo: guía paso a paso */
+  if (is.inApp) show("in-app");
+  else if (is.ios) show(is.iosOther ? "ios-other" : "ios-safari");
+  else if (is.android && is.firefox) show("firefox-android");
+  else if (is.macSafari) show("mac-safari");
+  /* Chrome/Edge sin aviso de instalación = ya instalada o no disponible: no se muestra nada */
 })();
 
 /* ============================================================
