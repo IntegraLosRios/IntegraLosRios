@@ -244,7 +244,7 @@ h1 .accent { color: var(--azul-ink); }
 @media (max-width: 600px) { .feats { gap: 6px; flex-wrap: nowrap; } .feats li { height: 32px; font-size: 12.5px; padding: 0 9px 0 6px; gap: 4px; white-space: nowrap; } .feats .ico { font-size: 15px; } .feats li.feats-k { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); padding: 0; } }
 @media (max-width: 379px) { .feats { flex-wrap: wrap; } }
 
-/* Indicadores */
+/* Indicadores (recuadros) */
 .stats {
   display: grid; grid-template-columns: repeat(2, minmax(min-content, 1fr)); gap: 10px;
   margin: 16px 0 0;
@@ -308,6 +308,124 @@ h1 .accent { color: var(--azul-ink); }
   .ro-kicker { display: none; }
   .ro h2 { font-size: 16.5px; line-height: 1.2; margin: 0 0 2px; }
   .ro-more p { font-size: 13.5px; }
+}
+
+/* =============================================================
+   DOCUMENTOS PARA LA MATRÍCULA
+   ============================================================= */
+.docs { margin-top: 20px; }
+/* Bloque plegable: cerrado es una barra; al pincharla se despliega */
+.mat { border-radius: 20px; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow-sm); overflow: hidden; }
+.mat-sum {
+  list-style: none; cursor: pointer; display: flex; align-items: center; gap: 14px;
+  padding: 14px 18px 14px 22px; position: relative;
+  background: linear-gradient(90deg, rgba(176,117,174,.14), rgba(85,135,212,.10) 55%, transparent);
+}
+.mat-sum::-webkit-details-marker { display: none; }
+.mat-sum::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: linear-gradient(var(--logo-rojo), var(--logo-amarillo), var(--logo-verde), var(--logo-azul)); }
+.mat-ico { flex: none; width: 44px; height: 44px; border-radius: 13px; display: grid; place-items: center; background: var(--morado-ink); color: var(--on-ink); font-size: 22px; }
+.mat-txt { flex: 1; min-width: 0; display: grid; gap: 1px; }
+.mat-txt b { font-family: var(--font-head); font-size: 19px; line-height: 1.15; }
+.mat-txt > span { font-size: 14px; color: var(--muted); font-weight: 600; }
+.mat-go { flex: none; display: inline-flex; align-items: center; gap: 4px; height: 38px; padding: 0 12px 0 16px; border-radius: 999px; background: var(--morado-ink); color: var(--on-ink); font-weight: 800; font-size: 14px; }
+.mat-go .ico { font-size: 18px; transition: transform .25s ease; }
+.mat[open] .mat-go .ico { transform: rotate(180deg); }
+.mat[open] .mat-go .mas, .mat:not([open]) .mat-go .menos { display: none; }
+.mat-sum:hover .mat-go { filter: brightness(1.08); }
+.mat-body { padding: 16px 18px 18px; border-top: 1px solid var(--line); }
+.mat[open] .mat-body { animation: matIn .3s ease; }
+@keyframes matIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+@media (max-width: 600px) {
+  .mat-sum { padding: 12px 12px 12px 18px; gap: 10px; }
+  .mat-ico { width: 38px; height: 38px; font-size: 19px; }
+  .mat-txt b { font-size: 17px; }
+  .mat-txt > span { font-size: 12.5px; line-height: 1.3; }
+  .mat-go { width: 36px; height: 36px; padding: 0; justify-content: center; }
+  .mat-go .mas, .mat-go .menos { display: none !important; }
+  .mat-body { padding: 14px; }
+}
+
+/* ¿Qué nivel le corresponde? */
+.lvl { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 14px 22px; align-items: stretch; padding: 16px; border-radius: 16px; background: var(--surface-2); }
+.lvl h3 { font-family: var(--font-head); font-weight: 800; font-size: 19px; line-height: 1.15; margin: 0 0 4px; }
+.lvl-form p { margin: 0 0 10px; font-size: 14px; color: var(--muted); }
+.lvl-form p b { color: var(--text); }
+.lvl-in { display: grid; gap: 4px; max-width: 280px; }
+.lvl-in span { font-size: 12.5px; font-weight: 800; color: var(--muted); }
+.lvl-in input {
+  width: 100%; height: 46px; padding: 0 14px; border-radius: 12px; border: 2px solid var(--line);
+  background: var(--surface); color: var(--text); font: inherit; font-size: 16px; font-weight: 700;
+}
+.lvl-in input:focus { outline: none; border-color: var(--i-morado); box-shadow: 0 0 0 4px rgba(176,117,174,.22); }
+.lvl-res {
+  min-width: 0; display: flex; flex-direction: column; justify-content: center; gap: 4px;
+  padding: 14px 16px; border-radius: 14px; background: var(--surface); border: 2px dashed var(--line); min-height: 110px;
+}
+.lvl-res.ok { border: 2px solid var(--lc, var(--i-azul)); }
+.lvl-res.warn { border: 2px solid var(--i-naranjo); }
+.lvl-empty { color: var(--muted); font-size: 14px; font-weight: 600; }
+.lvl-k { font-size: 12px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+.lvl-n { font-family: var(--font-head); font-weight: 800; font-size: clamp(24px, 2.4vw, 30px); line-height: 1.05; color: var(--lc-ink, var(--azul-ink)); }
+.lvl-n small { font-size: .6em; font-weight: 700; }
+.lvl-d { font-size: 14px; color: var(--text); }
+.lvl-note { font-size: 12px; color: var(--muted); }
+.lvl-w { font-size: 14px; font-weight: 600; }
+@media (max-width: 720px) { .lvl { grid-template-columns: 1fr; padding: 14px; } .lvl-in { max-width: none; } .lvl-res { min-height: 0; } }
+
+.docs-t { font-family: var(--font-head); font-weight: 800; font-size: 19px; margin: 18px 0 0; display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.docs-hint { display: none; font-family: var(--font-body); font-size: 12.5px; font-weight: 800; color: var(--muted); white-space: nowrap; }
+.docs-grid { list-style: none; margin: 14px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.doc {
+  position: relative; min-width: 0;
+  display: flex; flex-direction: column; gap: 10px;
+  padding: 18px 18px 18px; border-radius: 20px;
+  background: var(--surface); border: 1px solid var(--line); border-top: 6px solid var(--dc);
+  box-shadow: var(--shadow-sm); overflow: hidden;
+  --cc-ink: var(--dc-ink);
+}
+.doc::after {                       /* adorno de color en la esquina */
+  content: ""; position: absolute; right: -40px; top: -40px; width: 120px; height: 120px; border-radius: 50%;
+  background: var(--dc-bg); pointer-events: none;
+}
+.doc-top { display: flex; align-items: center; gap: 12px; position: relative; z-index: 1; }
+.doc-ico {
+  position: relative; flex: none; width: 50px; height: 50px; border-radius: 15px;
+  display: grid; place-items: center; background: var(--dc-bg); color: var(--dc-ink); font-size: 26px;
+}
+.doc-ico b {
+  position: absolute; top: -6px; right: -6px; width: 22px; height: 22px; border-radius: 50%;
+  display: grid; place-items: center; font-size: 12px; font-weight: 800;
+  background: var(--dc-ink); color: var(--on-ink); box-shadow: 0 0 0 3px var(--surface);
+}
+.doc h3 { font-family: var(--font-head); font-weight: 800; font-size: 19px; line-height: 1.15; margin: 0; }
+.doc p { margin: 0; font-size: 14.5px; line-height: 1.45; position: relative; z-index: 1; }
+.doc p strong { color: var(--dc-ink); }
+.doc .where {
+  display: flex; gap: 8px; align-items: flex-start;
+  padding: 10px 12px; border-radius: 12px; background: var(--surface-2);
+  font-size: 13.5px; color: var(--muted);
+}
+.doc .where .ico { flex: none; font-size: 16px; margin-top: 2px; color: var(--dc-ink); }
+.doc-actions { margin-top: auto; padding-top: 4px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+.doc .btn { height: auto; min-height: 44px; padding: 10px 16px; white-space: normal; text-align: left; line-height: 1.2; }
+.doc-link { font-weight: 800; font-size: 14px; color: var(--dc-ink); text-decoration: none; }
+.doc-link:hover { text-decoration: underline; }
+@media (max-width: 1000px) and (min-width: 721px) { .docs-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+/* Celular: tarjetas deslizables para no alargar la página */
+@media (max-width: 720px) {
+  .docs { margin-top: 16px; }
+  .docs-t { font-size: 17px; }
+  .docs-hint { display: inline; }
+  .docs-grid {
+    display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 12px;
+    margin-left: -14px; margin-right: -14px;
+    padding: 4px 14px 6px; scroll-padding: 0 14px;
+    scrollbar-width: none; overscroll-behavior-x: contain;
+  }
+  .docs-grid::-webkit-scrollbar { display: none; }
+  .doc { flex: 0 0 88%; scroll-snap-align: start; padding: 16px; }
+  .doc h3 { font-size: 17.5px; }
+  .doc p { font-size: 14px; }
 }
 
 /* =============================================================
@@ -726,6 +844,11 @@ html.theme-fade #themeBtn .ico { transition: transform .5s cubic-bezier(.34,1.56
   <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></symbol>
   <symbol id="i-quote" viewBox="0 0 24 24"><path d="M7 7h4v4c0 3-1.5 5-4 6M14 7h4v4c0 3-1.5 5-4 6"/></symbol>
   <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.7M12 17h.01"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></symbol>
+  <symbol id="i-health" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M12 8v6M9 11h6M8 3v18"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10M10 20v-5h4v5"/></symbol>
+  <symbol id="i-ext" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
   <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></symbol>
 </svg>
 
@@ -829,6 +952,77 @@ html.theme-fade #themeBtn .ico { transition: transform .5s cubic-bezier(.34,1.56
 </header>
 
 <!-- =============================================================
+     DOCUMENTOS OBLIGATORIOS PARA LA MATRÍCULA
+     ============================================================= -->
+<section class="wrap docs" aria-label="Matrícula">
+  <details class="mat" id="documentos">
+    <summary class="mat-sum">
+      <span class="mat-ico"><svg class="ico"><use href="#i-doc"/></svg></span>
+      <span class="mat-txt">
+        <b>Matrícula <span class="mat-year"></span></b>
+        <span>¿Qué nivel le corresponde a su hija o hijo? · Documentos obligatorios</span>
+      </span>
+      <span class="mat-go"><span class="mas">Ver</span><span class="menos">Cerrar</span><svg class="ico"><use href="#i-chev"/></svg></span>
+    </summary>
+    <div class="mat-body">
+
+      <!-- ¿Qué nivel le corresponde? -->
+      <div class="lvl">
+        <div class="lvl-form">
+          <h3>¿Qué nivel le corresponde a mi hija o hijo?</h3>
+          <p>Ingrese su fecha de nacimiento. El nivel se calcula según la edad que tendrá al <b class="lvl-corte"></b>.</p>
+          <label class="lvl-in">
+            <span>Fecha de nacimiento</span>
+            <input type="date" id="lvlNac" autocomplete="bday">
+          </label>
+        </div>
+        <div class="lvl-res" id="lvlRes" aria-live="polite">
+          <span class="lvl-empty">Aquí verá el nivel que le corresponde.</span>
+        </div>
+      </div>
+
+      <h3 class="docs-t">Documentos obligatorios para la matrícula <span class="docs-hint" aria-hidden="true">Deslice ›</span></h3>
+      <ol class="docs-grid">
+        <li class="doc" style="--dc:var(--i-azul);--dc-ink:var(--azul-ink);--dc-bg:rgba(85,135,212,.14)">
+          <div class="doc-top">
+            <span class="doc-ico"><svg class="ico"><use href="#i-doc"/></svg><b>1</b></span>
+            <h3>Certificado de nacimiento</h3>
+          </div>
+          <p>De la niña o niño, <strong>para asignación familiar</strong>. Es gratuito.</p>
+          <p class="where"><svg class="ico"><use href="#i-pin"/></svg><span>Descárguelo en línea con el RUN de la niña o niño en el sitio del Registro Civil, o solicítelo en cualquiera de sus oficinas.</span></p>
+          <div class="doc-actions">
+            <a class="btn btn-primary" href="https://www.registrocivil.cl/principal/servicios-en-linea" target="_blank" rel="noopener"><svg class="ico"><use href="#i-ext"/></svg>Obtener gratis en Registro Civil</a>
+          </div>
+        </li>
+        <li class="doc" style="--dc:var(--i-verde);--dc-ink:var(--verde-ink);--dc-bg:rgba(77,179,139,.16)">
+          <div class="doc-top">
+            <span class="doc-ico"><svg class="ico"><use href="#i-health"/></svg><b>2</b></span>
+            <h3>Cuaderno (carné) de salud</h3>
+          </div>
+          <p>De la niña o niño entre 0 y 9 años, que acredite sus <strong>controles de salud al día</strong>.</p>
+          <p class="where"><svg class="ico"><use href="#i-pin"/></svg><span>Se entrega sin costo en la maternidad al nacer o en su CESFAM al ingresar al control de salud infantil. Para ponerlo al día, acuda a su CESFAM.</span></p>
+          <div class="doc-actions">
+            <a class="btn btn-primary" href="https://www.crececontigo.gob.cl/material_familia/cuaderno-de-salud-de-ninos-y-ninas/" target="_blank" rel="noopener"><svg class="ico"><use href="#i-ext"/></svg>Más información en Chile Crece Contigo</a>
+          </div>
+        </li>
+        <li class="doc" style="--dc:var(--i-rosado);--dc-ink:var(--rosado-ink);--dc-bg:rgba(235,121,167,.16)">
+          <div class="doc-top">
+            <span class="doc-ico"><svg class="ico"><use href="#i-home"/></svg><b>3</b></span>
+            <h3>Cartola Hogar o solicitud de ingreso al RSH</h3>
+          </div>
+          <p>Del <strong>Registro Social de Hogares</strong> de su familia.</p>
+          <p class="where"><svg class="ico"><use href="#i-pin"/></svg><span>Descargue la Cartola Hogar con su ClaveÚnica. Si aún no está en el Registro, solicite su ingreso en línea o en la oficina del RSH de su municipalidad.</span></p>
+          <div class="doc-actions">
+            <a class="btn btn-primary" href="https://www.ventanillaunicasocial.gob.cl/ficha/449/obtener-cartola-hogar" target="_blank" rel="noopener"><svg class="ico"><use href="#i-ext"/></svg>Descargar Cartola Hogar</a>
+            <a class="doc-link" href="https://www.registrosocial.gob.cl/" target="_blank" rel="noopener">Solicitar ingreso al RSH ›</a>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </details>
+</section>
+
+<!-- =============================================================
      BÚSQUEDA Y FILTROS
      ============================================================= -->
 <main id="directorio">
@@ -887,6 +1081,7 @@ html.theme-fade #themeBtn .ico { transition: transform .5s cubic-bezier(.34,1.56
       <ul>
         <li><a href="https://www.integra.cl" target="_blank" rel="noopener"><svg class="ico"><use href="#i-globe"/></svg>www.integra.cl</a></li>
         <li><a href="https://geobuscador.integra.cl/" target="_blank" rel="noopener"><svg class="ico"><use href="#i-pin"/></svg>Geobuscador Integra</a></li>
+        <li><a href="#documentos"><svg class="ico"><use href="#i-doc"/></svg>Matrícula: nivel y documentos</a></li>
         <li><a href="https://asi.integra.cl/" target="_blank" rel="noopener"><svg class="ico"><use href="#i-help"/></svg>Sistema de Atención y Solicitudes (ASI)</a></li>
       </ul>
     </div>
@@ -909,7 +1104,7 @@ html.theme-fade #themeBtn .ico { transition: transform .5s cubic-bezier(.34,1.56
       <p><b>5. Almacenamiento en su dispositivo.</b> Para funcionar, el sitio guarda solo en su propio navegador, y sin datos que lo identifiquen: la preferencia de modo claro u oscuro, si cerró el aviso de instalación o ya instaló la app, y una copia de los archivos del sitio para su uso sin conexión. Esta información no se transmite a Fundación Integra ni a terceros, y puede eliminarla en cualquier momento borrando los datos de navegación del sitio.</p>
       <p><b>6. Ubicación.</b> La función «Cerca de mí» solo se activa si usted la utiliza y autoriza el permiso de ubicación en su navegador. La ubicación se procesa en su dispositivo para calcular distancias y no se almacena ni se envía a Fundación Integra. El servicio de ubicación del dispositivo o navegador opera según las políticas de su fabricante.</p>
       <p><b>7. Alojamiento del sitio.</b> El sitio está alojado en GitHub Pages, servicio de GitHub, Inc. (Estados Unidos), que registra la dirección IP de los visitantes con fines de seguridad, conforme a su <a href="https://docs.github.com/es/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener">declaración de privacidad</a>.</p>
-      <p><b>8. Enlaces a otros sitios.</b> Los enlaces a Google Maps, Instagram y otros sitios externos llevan a servicios que se rigen por sus propias políticas de privacidad.</p>
+      <p><b>8. Enlaces a otros sitios.</b> Los enlaces a Google Maps, Instagram, el Registro Civil, Chile Crece Contigo, el Registro Social de Hogares y otros sitios externos llevan a servicios que se rigen por sus propias políticas de privacidad.</p>
       <p><b>9. Derechos de los titulares.</b> Usted puede ejercer los derechos que le reconoce la ley: de acceso, rectificación, cancelación y bloqueo, conforme a la Ley N° 19.628, y, desde el 1 de diciembre de 2026, de acceso, rectificación, supresión, oposición, portabilidad y bloqueo, conforme a la Ley N° 21.719. Para hacerlo, puede comunicarse con Fundación Integra a través de la línea gratuita <a href="tel:800540011">800 540 011</a> o de <a href="https://www.integra.cl" target="_blank" rel="noopener">www.integra.cl</a>. Si estima que sus derechos no han sido respetados, puede recurrir a los tribunales de justicia según el artículo 16 de la Ley N° 19.628 y, desde la entrada en vigencia de la Ley N° 21.719, presentar un reclamo ante la Agencia de Protección de Datos Personales.</p>
       <p><b>10. Actualizaciones.</b> Este aviso puede modificarse para reflejar cambios en el sitio o en la normativa. Última actualización: 24 de septiembre de 2026.</p>
     </div>
@@ -1629,6 +1824,93 @@ const haystack = JARDINES.map(j => norm([j.nombre, j.comuna, j.direccion, j.sell
   const d = $("#roMore"), mq = matchMedia("(min-width: 721px)");
   const sync = () => { if (mq.matches) d.open = true; };
   sync(); mq.addEventListener ? mq.addEventListener("change", sync) : mq.addListener(sync);
+})();
+
+/* ============================================================
+   MATRÍCULA: bloque plegable + "¿Qué nivel le corresponde?"
+   La edad se calcula siempre al 31 de marzo del año en curso
+   (2026 este año; 2027 el próximo, y así sucesivamente).
+   Rangos por nivel (edad cumplida al 31 de marzo):
+     Sala Cuna Menor   84 días a 11 meses 29 días
+     Sala Cuna Mayor   1 año a 1 año 11 meses 29 días
+     Medio Menor       2 años a 2 años 11 meses 29 días
+     Medio Mayor       3 años a 3 años 11 meses 29 días
+     Transición Menor  4 años a 4 años 11 meses 29 días (Prekínder)
+     Transición Mayor  5 años a 5 años 11 meses 29 días (Kínder)
+   ============================================================ */
+(function () {
+  const mat = $("#documentos");
+  /* Los enlaces a #documentos abren el bloque */
+  const abrir = () => { mat.open = true; };
+  document.querySelectorAll('a[href="#documentos"]').forEach(a => a.addEventListener("click", abrir));
+  if (location.hash === "#documentos") abrir();
+
+  const ANIO = new Date().getFullYear();
+  const CORTE = new Date(Date.UTC(ANIO, 2, 31));
+  const MESES = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+  const fmtLargo = d => `${d.getUTCDate()} de ${MESES[d.getUTCMonth()]} de ${d.getUTCFullYear()}`;
+  document.querySelectorAll(".mat-year").forEach(e => e.textContent = ANIO);
+  document.querySelectorAll(".lvl-corte").forEach(e => e.textContent = fmtLargo(CORTE));
+
+  const NIVELES = [
+    { n: "Sala Cuna Menor",  min: { d: 84 }, maxY: 1, r: "84 días a 11 meses 29 días",       c: "azul" },
+    { n: "Sala Cuna Mayor",  min: { y: 1 },  maxY: 2, r: "1 año a 1 año 11 meses 29 días",   c: "verde" },
+    { n: "Medio Menor",      min: { y: 2 },  maxY: 3, r: "2 años a 2 años 11 meses 29 días", c: "naranjo" },
+    { n: "Medio Mayor",      min: { y: 3 },  maxY: 4, r: "3 años a 3 años 11 meses 29 días", c: "rosado" },
+    { n: "Transición Menor", sub: "Prekínder", min: { y: 4 }, maxY: 5, r: "4 años a 4 años 11 meses 29 días", c: "morado" },
+    { n: "Transición Mayor", sub: "Kínder",    min: { y: 5 }, maxY: 6, r: "5 años a 5 años 11 meses 29 días", c: "azul" }
+  ];
+  /* Fechas en UTC para evitar saltos de huso horario */
+  const add = (dt, { y = 0, m = 0, d = 0 }) => {
+    let Y = dt.getUTCFullYear() + y, M = dt.getUTCMonth() + m;
+    Y += Math.floor(M / 12); M = ((M % 12) + 12) % 12;
+    const ult = new Date(Date.UTC(Y, M + 1, 0)).getUTCDate();
+    const t = new Date(Date.UTC(Y, M, Math.min(dt.getUTCDate(), ult)));
+    t.setUTCDate(t.getUTCDate() + d); return t;
+  };
+  const shift = (dt, n) => { const t = new Date(dt.getTime()); t.setUTCDate(t.getUTCDate() + n); return t; };
+  /* Tope = día anterior a cumplir maxY años (lo que la tabla expresa como "11 meses 29 días") */
+  const cumple = (nac, nv) => add(nac, nv.min) <= CORTE && CORTE <= shift(add(nac, { y: nv.maxY }), -1);
+  function edad(nac) {
+    let y = CORTE.getUTCFullYear() - nac.getUTCFullYear(), m = CORTE.getUTCMonth() - nac.getUTCMonth(), d = CORTE.getUTCDate() - nac.getUTCDate();
+    if (d < 0) { m--; d += new Date(Date.UTC(CORTE.getUTCFullYear(), CORTE.getUTCMonth(), 0)).getUTCDate(); }
+    if (m < 0) { m += 12; y--; }
+    const p = [];
+    if (y) p.push(y + (y === 1 ? " año" : " años"));
+    if (m) p.push(m + (m === 1 ? " mes" : " meses"));
+    if (d || !p.length) p.push(d + (d === 1 ? " día" : " días"));
+    return p.length > 1 ? p.slice(0, -1).join(", ") + " y " + p[p.length - 1] : p[0];
+  }
+  const fmt = d => [d.getUTCDate(), d.getUTCMonth() + 1].map(n => String(n).padStart(2, "0")).join("-") + "-" + d.getUTCFullYear();
+
+  const inp = $("#lvlNac"), res = $("#lvlRes");
+  inp.max = `${ANIO + 1}-12-31`; inp.min = `${ANIO - 8}-01-01`;
+  function calc() {
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(inp.value);
+    res.className = "lvl-res"; res.removeAttribute("style");
+    if (!m) { res.innerHTML = '<span class="lvl-empty">Aquí verá el nivel que le corresponde.</span>'; return; }
+    const nac = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3]));
+    const nv = NIVELES.find(x => cumple(nac, x));
+    if (nv) {
+      res.classList.add("ok");
+      res.style.cssText = `--lc:var(--i-${nv.c});--lc-ink:var(--${nv.c}-ink)`;
+      res.innerHTML = `<span class="lvl-k">Nivel que le corresponde en ${ANIO}</span>
+        <span class="lvl-n">${nv.n}${nv.sub ? ` <small>(${nv.sub})</small>` : ""}</span>
+        <span class="lvl-d">Edad al ${fmt(CORTE)}: <b>${edad(nac)}</b></span>
+        <span class="lvl-note">El jardín confirma el nivel al momento de la matrícula.</span>`;
+      return;
+    }
+    res.classList.add("warn");
+    const dias84 = add(nac, { d: 84 });
+    if (dias84 > CORTE) {
+      res.innerHTML = `<span class="lvl-k">Aún no tiene la edad mínima</span>
+        <span class="lvl-w">Al ${fmt(CORTE)} no cumple los 84 días de vida (postnatal de 12 semanas). Podrá ingresar a <b>Sala Cuna Menor</b> desde el <b>${fmt(dias84)}</b>, según disponibilidad.</span>`;
+    } else {
+      res.innerHTML = `<span class="lvl-k">Fuera de educación parvularia</span>
+        <span class="lvl-w">Al ${fmt(CORTE)} tendrá <b>${edad(nac)}</b>: supera la edad de los niveles de sala cuna y jardín infantil. Le corresponde educación básica.</span>`;
+    }
+  }
+  inp.addEventListener("input", calc); inp.addEventListener("change", calc);
 })();
 
 /* Indicadores */
