@@ -17,10 +17,6 @@
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
-<!-- Rendimiento: la imagen de inicio se pide antes que todo lo demás -->
-<link rel="preload" as="image" href="img/inicio-720.webp" type="image/webp"
-      imagesrcset="img/inicio-720.webp 720w, img/inicio.webp 1080w" imagesizes="(max-width: 720px) 100vw, 560px" fetchpriority="high">
-
 <!-- Tipografías redondeadas alojadas en el mismo sitio (sin depender de Google,
      funcionan sin conexión y no bloquean la carga en redes móviles lentas) -->
 <link rel="preload" href="fonts/nunito.woff2" as="font" type="font/woff2" crossorigin>
@@ -29,7 +25,7 @@
 <!-- Tema guardado: se aplica antes de pintar para evitar parpadeo -->
 <script>
   try { var t = localStorage.getItem("tema"); if (t === "dark" || t === "light") document.documentElement.dataset.theme = t; } catch (e) {}
-  document.documentElement.classList.add("js", "splash-on");
+  document.documentElement.classList.add("js");
   if (t) document.querySelectorAll('meta[name="theme-color"]').forEach(function (m) { m.content = t === "dark" ? "#0E1526" : "#2F5FAF"; });
 </script>
 
@@ -123,7 +119,6 @@ body {
   touch-action: manipulation;          /* sin retardo al tocar */
   overscroll-behavior-y: none;
 }
-html.splash-on body { overflow: hidden; }
 img { max-width: 100%; display: block; }
 a { color: var(--primary); }
 button { font: inherit; color: inherit; }
@@ -135,58 +130,7 @@ button { font: inherit; color: inherit; }
 .ico { width: 1em; height: 1em; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 :focus-visible { outline: 3px solid var(--i-naranjo); outline-offset: 2px; border-radius: 8px; }
 
-/* =============================================================
-   PANTALLA DE INICIO (se difumina sola)
-   ============================================================= */
-.splash {
-  position: fixed; inset: 0; z-index: 100000;
-  display: grid; place-items: center;
-  background: var(--i-arena);
-  overflow: hidden;
-  transition: opacity .7s ease, transform .7s ease, visibility 0s linear .7s;
-  will-change: opacity, transform;
-}
-/* Fondo ya desenfocado (1 KB incrustado): aparece al instante y no exige
-   al procesador gráfico del celular como un filtro blur en vivo */
-.splash-bg {
-  position: absolute; inset: 0;
-  background: url("data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA4KCw0LCQ4NDA0QDw4RFiQXFhQUFiwgIRokNC43NjMuMjI6QVNGOj1OPjIySGJJTlZYXV5dOEVmbWVabFNbXVn/2wBDAQ8QEBYTFioXFypZOzI7WVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVn/wAARCAB4AGADASIAAhEBAxEB/8QAGwAAAgMBAQEAAAAAAAAAAAAAAwQAAgUBBgf/xAAjEAACAgEEAgMBAQAAAAAAAAAAAQIDEQQSEzEhYQUUUUEy/8QAGgEAAwEBAQEAAAAAAAAAAAAAAQIDAAQFBv/EABwRAAMBAQEAAwAAAAAAAAAAAAABAhESAxMhMf/aAAwDAQACEQMRAD8AM5g5XbSs3hCN9uMkSiemhDWJPseo1KnjyeTle1Ls0/jrnKS8jpitHp4VciCfU9F9C04LJoLaP8mIVTj0zo6XD6HKK9oZJMukkS3WXfo2sO5wgcn5Ly6BPsFggJAYgLwDxYIBZ81uv8GbffnPkJduwZ1reSjIebZffmRsfGf6RhV+ZG38e9uBSjZ6/SW7YIO9Vh9mJDU7YdlHq8y7A0BHpab939G4zWDz2k1GceTQ+ykuxpWAZoORUQjqk32N1T3IZpMKbQeIVSAo7kynAOtPn12nTT8GTqaMN+DdVimhe+jf/CHTL8Iw6anuNfTLbE5XpGpdDsaGo9DaK5AWWteCtc25BJ0NstXRgdfYv4O6axxSDWah47FYraSWWK3gF9h6L259m5pLMxR52rxI1NPdtSDOsNNI3YzTLrDMyGo9jEL/AGP1hLNPn+ntbaNaiKmkZOmokpLwbmkg0kDlFF6YFhpl+BeBY6CxXgvjJnIy9EJSoWejnDj+Dzryc4zKQukxB1FeM0OE46fQedJ9JCChhhoZQZ1EUB0sJ1SZ2EmgqsaKRgwiqbOT1eMyYvX8Zh9Dlej2ro2OFfhHWjoC50y+DB1Uj8qymwZCciqqO8QxtJhBDjAcJHT6GUkd8A0PDEnp/RPreh7CJ4EdoPxNikdP6DRoQXKRN6JU0x58mNNo52LO72djadDRgzjkHKOC3IsA7LFgVvEZY2Ck8FN4K23yB5fJy16Vp1T5zg5vObxVWneQXumNxKGeQq7RZ2FHYTdUUUyNO0q7RZ2HOQm+iiUnfs5/oSGo9mWtwSLkfQ35o8Dtmp9j2VnfldiUWy2GzmpFpVHZ2ZB7mW2s5sJcIrtIimyOxk2FXBhUIDdHHayrsZbiZx1MZecg6so7Wc5iSqYKVbLz4QwV60jW+qvw6tN6IQZ0yalF1p/RbgIQizon8K8ROIhDB07xHOH0QhjaXVC/Dv11+EIKErLTL8BvSr8IQpNNErP/2Q==") center / cover no-repeat;
-  opacity: .6;
-}
-.splash picture { position: relative; z-index: 1; }
-.splash img {
-  max-height: 100vh; max-height: 100dvh;
-  max-width: min(100vw, 560px);
-  width: auto; height: auto;
-  object-fit: contain;
-  box-shadow: 0 20px 60px rgba(0,0,0,.25);
-  animation: splashIn .6s ease both;
-}
-@media (min-width: 721px) { .splash img { border-radius: 20px; max-height: calc(100dvh - 48px); } }
-.splash-bar {
-  position: absolute; left: 0; bottom: 0; z-index: 2; height: 5px; width: 100%;
-  background: linear-gradient(90deg, var(--logo-rojo), var(--logo-amarillo), var(--logo-verde), var(--logo-azul));
-  transform-origin: left; transform: scaleX(0);
-}
-.splash.run .splash-bar { animation: splashBar var(--splash-ms, 2000ms) linear forwards; }
-.splash-skip {
-  position: absolute; z-index: 2; right: 16px; bottom: calc(18px + env(safe-area-inset-bottom));
-  border: 0; border-radius: 999px; padding: 10px 18px;
-  background: rgba(255,255,255,.92); color: #1F2A44; font-weight: 800; font-size: 14px;
-  box-shadow: 0 4px 14px rgba(0,0,0,.18); cursor: pointer;
-}
-.splash.leaving { opacity: 0; transform: scale(1.04); visibility: hidden; pointer-events: none; }
-/* En computadores se agrega el efecto de difuminado */
-@media (min-width: 721px) and (hover: hover) {
-  .splash { transition: opacity .7s ease, transform .7s ease, filter .7s ease, visibility 0s linear .7s; }
-  .splash.leaving { filter: blur(12px); }
-}
-@keyframes splashIn  { from { opacity: 0; transform: scale(.97); } to { opacity: 1; transform: none; } }
-@keyframes splashBar { to { transform: scaleX(1); } }
 
-/* Mientras está la pantalla de inicio, el contenido espera detrás */
-html.splash-on .page { opacity: 0; }
-.page { transition: opacity .6s ease .1s; }
 
 /* =============================================================
    CABECERA
@@ -648,6 +592,58 @@ h1 .accent { color: var(--azul-ink); }
 }
 
 /* =============================================================
+   SÍMBOLOS INSTITUCIONALES (ola, semicírculo, montañas, zigzag, arco)
+   ============================================================= */
+.sym { display: block; flex: none; }
+/* Barra final: los símbolos se apoyan sobre el pie de página */
+.sym-bar { overflow: hidden; margin-top: 16px; }
+.sym-row { display: flex; align-items: flex-end; gap: clamp(10px, 2.2vw, 34px); height: clamp(52px, 6vw, 72px); }
+.sym-row .s-wave { width: clamp(70px, 7vw, 104px); height: auto; aspect-ratio: 96 / 34; }
+.sym-row .s-semi { width: clamp(40px, 4vw, 60px); height: auto; aspect-ratio: 2 / 1; }
+.sym-row .s-tri  { width: clamp(46px, 4.4vw, 66px); height: auto; aspect-ratio: 66 / 58; }
+.sym-row .s-zig  { width: clamp(38px, 3.6vw, 54px); height: auto; aspect-ratio: 3 / 1; margin-bottom: 14px; }
+.sym-row .s-arc  { width: clamp(56px, 5.4vw, 80px); height: auto; aspect-ratio: 4 / 3; margin-right: calc(-1 * clamp(10px, 1.5vw, 22px)); }
+.sym-row .sym-sp { flex: 1; }
+.sym-url { margin-bottom: 12px; font-weight: 700; font-size: 14px; color: var(--muted); text-decoration: none; white-space: nowrap; }
+.sym-url:hover { color: var(--azul-ink); }
+@media (max-width: 520px) { .sym-row .s-zig { display: none; } .sym-url { font-size: 12.5px; } }
+
+/* Guion del antetítulo convertido en zigzag institucional */
+.eyebrow::before {
+  width: 26px !important; height: 9px !important; border-radius: 0 !important; background: none !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 54 18'%3E%3Cpath fill='none' stroke='%2375BC21' stroke-width='6' d='M2 15 11 5l9 10 9-10 9 10 9-10 7 8'/%3E%3C/svg%3E") !important;
+  background-size: contain !important; background-repeat: no-repeat !important;
+}
+
+/* Adornos en el bloque de Reconocimiento Oficial */
+.ro-deco { position: absolute; pointer-events: none; z-index: 0; }
+.ro > * { position: relative; z-index: 1; }
+.ro > .ro-deco { position: absolute; z-index: 0; }
+.ro-deco.arc { right: -14px; bottom: -8px; width: 92px; height: auto; aspect-ratio: 4 / 3; opacity: .9; }
+.ro-deco.tri { right: 84px; bottom: -2px; width: 44px; height: auto; aspect-ratio: 66 / 58; opacity: .85; }
+.ro-deco.wave { left: -6px; top: -6px; width: 70px; height: auto; aspect-ratio: 96 / 34; opacity: .5; transform: rotate(180deg); }
+@media (max-width: 600px) { .ro-deco.tri, .ro-deco.wave { display: none; } .ro-deco.arc { width: 64px; } }
+
+/* Tarjetas de documentos: cada una con su símbolo */
+.doc::after { display: none; }
+.doc > * { position: relative; z-index: 1; }
+.doc > .doc-deco { position: absolute; z-index: 0; }
+.doc-deco { position: absolute; top: 10px; right: 12px; width: 56px; height: auto; opacity: .9; pointer-events: none; }
+.doc-deco.s-semi { aspect-ratio: 2 / 1; top: auto; bottom: 0; right: 18px; width: 64px; opacity: .22; }
+.doc-deco.s-tri  { aspect-ratio: 66 / 58; top: auto; bottom: 0; right: 16px; width: 56px; opacity: .22; }
+.doc-deco.s-arc  { aspect-ratio: 4 / 3; top: auto; bottom: -4px; right: -8px; width: 70px; opacity: .25; }
+
+/* Bloque de matrícula: ola amarilla bajo la barra */
+.mat-sum .s-wave { position: absolute; right: 70px; bottom: 0; width: 84px; height: auto; aspect-ratio: 96 / 34; opacity: .35; pointer-events: none; }
+@media (max-width: 600px) { .mat-sum .s-wave { display: none; } }
+
+/* Sin resultados: pequeña ilustración con los símbolos */
+.empty-art { display: flex; justify-content: center; align-items: flex-end; gap: 10px; margin: 0 auto 12px; height: 46px; }
+.empty-art .s-semi { width: 50px; aspect-ratio: 2 / 1; height: auto; }
+.empty-art .s-tri { width: 52px; aspect-ratio: 66 / 58; height: auto; }
+.empty-art .s-zig { width: 40px; aspect-ratio: 3 / 1; height: auto; margin-bottom: 10px; }
+
+/* =============================================================
    BOTÓN "VOLVER ARRIBA" Y AVISOS
    ============================================================= */
 .fab {
@@ -809,10 +805,8 @@ html.theme-fade #themeBtn .ico { transition: transform .5s cubic-bezier(.34,1.56
 /* Movimiento reducido: sin desenfoques ni desplazamientos */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .2s !important; }
-  .splash.leaving { filter: none; }
 }
 </style>
-<noscript><style>.splash{display:none} html.splash-on body{overflow:auto} html.splash-on .page{opacity:1}</style></noscript>
 </head>
 <body>
 
@@ -844,49 +838,14 @@ html.theme-fade #themeBtn .ico { transition: transform .5s cubic-bezier(.34,1.56
   <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10M10 20v-5h4v5"/></symbol>
   <symbol id="i-ext" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></symbol>
   <symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <!-- Símbolos gráficos institucionales de Integra -->
+  <symbol id="s-wave" viewBox="0 0 96 34"><path fill="#FBD22A" d="M0 10c8 0 8-8 16-8s8 8 16 8 8-8 16-8 8 8 16 8 8-8 16-8 8 8 16 8v24H0z"/></symbol>
+  <symbol id="s-semi" viewBox="0 0 60 30"><path fill="#3085CD" d="M0 30a30 30 0 0 1 60 0z"/></symbol>
+  <symbol id="s-tri" viewBox="0 0 66 58"><path fill="#75BC21" d="M0 58 17 0l17 58zM30 58 47 0l19 58z"/></symbol>
+  <symbol id="s-zig" viewBox="0 0 54 18"><path fill="none" stroke="#669FD7" stroke-width="5" stroke-linejoin="miter" d="M2 15 11 5l9 10 9-10 9 10 9-10 7 8"/></symbol>
+  <symbol id="s-arc" viewBox="0 0 80 60"><path fill="none" stroke="#EE6B66" stroke-width="18" d="M9 60V50a31 31 0 0 1 62 0v10"/></symbol>
   <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></symbol>
 </svg>
-
-<!-- =============================================================
-     PANTALLA DE INICIO
-     Para cambiar la imagen, reemplace img/inicio.webp, img/inicio-720.webp
-     e img/inicio.jpg (formato vertical 1080×1350 recomendado).
-     Tiempo visible: atributo data-ms (milisegundos).
-     ============================================================= -->
-<div class="splash" id="splash" data-ms="2000" role="dialog" aria-modal="true" aria-label="Bienvenida Fundación Integra">
-  <div class="splash-bg" aria-hidden="true"></div>
-  <picture>
-    <source type="image/webp" srcset="img/inicio-720.webp 720w, img/inicio.webp 1080w" sizes="(max-width: 720px) 100vw, 560px">
-    <img id="splashImg" src="img/inicio.jpg" width="1080" height="1350" fetchpriority="high"
-         alt="Fundación Integra: salas cuna y jardines infantiles gratuitos en la Región de Los Ríos">
-  </picture>
-  <button class="splash-skip" id="splashSkip" type="button">Ingresar ›</button>
-  <div class="splash-bar" aria-hidden="true"></div>
-</div>
-<script>
-/* Se ejecuta de inmediato para que el conteo parta apenas la imagen esté lista */
-(function () {
-  var el = document.getElementById("splash"), img = document.getElementById("splashImg");
-  var ms = +el.dataset.ms || 2000, done = false, t0;
-  var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
-  el.style.setProperty("--splash-ms", ms + "ms");
-  function close() {
-    if (done) return; done = true;
-    el.classList.add("leaving");
-    document.documentElement.classList.remove("splash-on");
-    setTimeout(function () { el.remove(); document.dispatchEvent(new Event("splash:done")); }, reduce ? 200 : 750);
-  }
-  function start() {
-    if (t0) return; t0 = setTimeout(close, ms);
-    el.classList.add("run");
-  }
-  if (img.complete && img.naturalWidth) start();
-  else { img.addEventListener("load", start); img.addEventListener("error", close); }
-  setTimeout(close, ms + 2500);          /* respaldo si la red está lenta */
-  el.addEventListener("click", close);    /* tocar en cualquier parte también ingresa */
-  document.addEventListener("keydown", function k(e) { if (e.key === "Escape" || e.key === "Enter") { close(); document.removeEventListener("keydown", k); } });
-})();
-</script>
 
 <div class="page" id="page">
 
@@ -920,6 +879,8 @@ html.theme-fade #themeBtn .ico { transition: transform .5s cubic-bezier(.34,1.56
 
     <!-- RECONOCIMIENTO OFICIAL -->
     <section class="ro" aria-labelledby="roTitle">
+      <svg class="sym s-tri ro-deco tri" aria-hidden="true" focusable="false"><use href="#s-tri"/></svg>
+      <svg class="sym s-arc ro-deco arc" aria-hidden="true" focusable="false"><use href="#s-arc"/></svg>
       <picture>
         <source type="image/webp" srcset="img/reconocimiento-oficial.webp">
         <img class="ro-seal" src="img/reconocimiento-oficial.png" width="296" height="296" loading="lazy" decoding="async"
@@ -975,6 +936,7 @@ html.theme-fade #themeBtn .ico { transition: transform .5s cubic-bezier(.34,1.56
       <h3 class="docs-t">Documentos obligatorios para la matrícula <span class="docs-hint" aria-hidden="true">Deslice ›</span></h3>
       <ol class="docs-grid">
         <li class="doc" style="--dc:var(--i-azul);--dc-ink:var(--azul-ink);--dc-bg:rgba(85,135,212,.14)">
+        <svg class="sym s-semi doc-deco" aria-hidden="true" focusable="false"><use href="#s-semi"/></svg>
           <div class="doc-top">
             <span class="doc-ico"><svg class="ico"><use href="#i-doc"/></svg><b>1</b></span>
             <h3>Certificado de nacimiento</h3>
@@ -986,6 +948,7 @@ html.theme-fade #themeBtn .ico { transition: transform .5s cubic-bezier(.34,1.56
           </div>
         </li>
         <li class="doc" style="--dc:var(--i-verde);--dc-ink:var(--verde-ink);--dc-bg:rgba(77,179,139,.16)">
+        <svg class="sym s-tri doc-deco" aria-hidden="true" focusable="false"><use href="#s-tri"/></svg>
           <div class="doc-top">
             <span class="doc-ico"><svg class="ico"><use href="#i-health"/></svg><b>2</b></span>
             <h3>Cuaderno (carné) de salud</h3>
@@ -997,6 +960,7 @@ html.theme-fade #themeBtn .ico { transition: transform .5s cubic-bezier(.34,1.56
           </div>
         </li>
         <li class="doc" style="--dc:var(--i-rosado);--dc-ink:var(--rosado-ink);--dc-bg:rgba(235,121,167,.16)">
+        <svg class="sym s-arc doc-deco" aria-hidden="true" focusable="false"><use href="#s-arc"/></svg>
           <div class="doc-top">
             <span class="doc-ico"><svg class="ico"><use href="#i-home"/></svg><b>3</b></span>
             <h3>Cartola Hogar o solicitud de ingreso al RSH</h3>
@@ -1049,15 +1013,25 @@ html.theme-fade #themeBtn .ico { transition: transform .5s cubic-bezier(.34,1.56
       </span>
     </div>
     <div class="grid" id="grid"></div>
-    <div class="empty" id="empty"><b>No encontramos coincidencias</b>Pruebe con otro nombre o seleccione «Todas las comunas».</div>
+    <div class="empty" id="empty"><div class="empty-art"><svg class="sym s-semi" aria-hidden="true" focusable="false"><use href="#s-semi"/></svg><svg class="sym s-tri" aria-hidden="true" focusable="false"><use href="#s-tri"/></svg><svg class="sym s-zig" aria-hidden="true" focusable="false"><use href="#s-zig"/></svg></div><b>No encontramos coincidencias</b>Pruebe con otro nombre o seleccione «Todas las comunas».</div>
   </div>
 </main>
 
 <!-- =============================================================
      PIE DE PÁGINA
      ============================================================= -->
+<div class="sym-bar">
+  <div class="wrap sym-row">
+    <svg class="sym s-wave" aria-hidden="true" focusable="false"><use href="#s-wave"/></svg>
+    <svg class="sym s-semi" aria-hidden="true" focusable="false"><use href="#s-semi"/></svg>
+    <svg class="sym s-tri" aria-hidden="true" focusable="false"><use href="#s-tri"/></svg>
+    <span class="sym-sp"></span>
+    <svg class="sym s-zig" aria-hidden="true" focusable="false"><use href="#s-zig"/></svg>
+    <a class="sym-url" href="https://www.integra.cl" target="_blank" rel="noopener">www.integra.cl</a>
+    <svg class="sym s-arc" aria-hidden="true" focusable="false"><use href="#s-arc"/></svg>
+  </div>
+</div>
 <footer>
-  <div class="stripe" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
   <div class="wrap foot">
     <div>
       <h4>Fundación Integra · Región de Los Ríos</h4>
@@ -1992,10 +1966,7 @@ function goToJardin(card) {
   card.scrollIntoView({ block: "center" });
   card.classList.remove("flash"); void card.offsetWidth; card.classList.add("flash");
 }
-if (pendingJardin) {
-  if (document.getElementById("splash")) document.addEventListener("splash:done", () => goToJardin(pendingJardin), { once: true });
-  else goToJardin(pendingJardin);
-}
+if (pendingJardin) requestAnimationFrame(() => goToJardin(pendingJardin));
 
 /* ============================================================
    COMPARTIR UN JARDÍN (menú nativo del celular o copia al portapapeles)
@@ -2201,7 +2172,7 @@ addEventListener("online",  () => toast("Conexión restablecida"));
     const t0 = +ls.get("pwa-dismissed-at") || 0;
     if (Date.now() - t0 > 14 * 864e5) {
       const open = () => setTimeout(() => { if (mode) setBanner(true); }, 4000);
-      document.getElementById("splash") ? document.addEventListener("splash:done", open, { once: true }) : open();
+      open();
     }
   }
   function hide() { mode = null; btn.hidden = true; foot.hidden = true; setBanner(false); }
