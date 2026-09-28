@@ -3,7 +3,7 @@
    Al publicar cambios, suba el número de versión para que
    todos los equipos descarguen la versión nueva.
    ============================================================ */
-const VERSION = "v3.4.0";
+const VERSION = "v3.5.0";
 const CACHE_STATIC = "integra-static-" + VERSION;
 const CACHE_RUNTIME = "integra-runtime-" + VERSION;
 
@@ -14,6 +14,8 @@ const PRECACHE = [
   "./icon-192.png",
   "./icon-512.png",
   "./apple-touch-icon.png",
+  "./icon-maskable-192.png",
+  "./icon-maskable-512.png",
   "./img/banner-800.webp",
   "./img/banner.webp",
   "./img/reconocimiento-oficial.webp",

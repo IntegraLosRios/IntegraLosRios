@@ -14,6 +14,9 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Integra Los Ríos">
+<!-- iOS: no convertir automáticamente números, fechas o direcciones en enlaces
+     (los teléfonos y correos ya tienen sus propios enlaces) -->
+<meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
@@ -1069,7 +1072,7 @@ html.theme-fade #themeBtn .ico { transition: transform .5s cubic-bezier(.34,1.56
       <p><b>5. Almacenamiento en su dispositivo.</b> Para funcionar, el sitio guarda solo en su propio navegador, y sin datos que lo identifiquen: la preferencia de modo claro u oscuro, si cerró el aviso de instalación o ya instaló la app, y una copia de los archivos del sitio para su uso sin conexión. Esta información no se transmite a Integra Los Ríos ni a terceros, y puede eliminarla en cualquier momento borrando los datos de navegación del sitio.</p>
       <p><b>6. Ubicación.</b> La función «Cerca de mí» solo se activa si usted la utiliza y autoriza el permiso de ubicación en su navegador. La ubicación se procesa en su dispositivo para calcular distancias y no se almacena ni se envía a Integra Los Ríos. El servicio de ubicación del dispositivo o navegador opera según las políticas de su fabricante.</p>
       <p><b>7. Alojamiento del sitio.</b> El sitio está alojado en GitHub Pages, servicio de GitHub, Inc. (Estados Unidos), que registra la dirección IP de los visitantes con fines de seguridad, conforme a su <a href="https://docs.github.com/es/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener">declaración de privacidad</a>.</p>
-      <p><b>8. Enlaces a otros sitios.</b> Los enlaces a Google Maps, Instagram, el Registro Civil, Chile Crece Contigo, el Registro Social de Hogares y otros sitios externos llevan a servicios que se rigen por sus propias políticas de privacidad.</p>
+      <p><b>8. Enlaces a otros sitios.</b> Los enlaces a Google Maps, Mapas de Apple, Instagram, el Registro Civil, Chile Crece Contigo, el Registro Social de Hogares y otros sitios externos llevan a servicios que se rigen por sus propias políticas de privacidad.</p>
       <p><b>9. Derechos de los titulares.</b> Usted puede ejercer los derechos que le reconoce la ley: de acceso, rectificación, cancelación y bloqueo, conforme a la Ley N° 19.628, y, desde el 1 de diciembre de 2026, de acceso, rectificación, supresión, oposición, portabilidad y bloqueo, conforme a la Ley N° 21.719. Para hacerlo, puede comunicarse con Integra Los Ríos al <a href="tel:+56632631300">63 263 13 00</a>, o con Fundación Integra a través de la línea gratuita <a href="tel:800540011">800 540 011</a> o de <a href="https://www.integra.cl" target="_blank" rel="noopener">www.integra.cl</a>. Si estima que sus derechos no han sido respetados, puede recurrir a los tribunales de justicia según el artículo 16 de la Ley N° 19.628 y, desde la entrada en vigencia de la Ley N° 21.719, presentar un reclamo ante la Agencia de Protección de Datos Personales.</p>
       <p><b>10. Actualizaciones.</b> Este aviso puede modificarse para reflejar cambios en el sitio o en la normativa. Última actualización: 25 de septiembre de 2026.</p>
     </div>
@@ -1721,10 +1724,31 @@ function telFmt(n) {
   if (d.length !== 9) return n;
   return d[0] === "9" ? `${d[0]} ${d.slice(1,5)} ${d.slice(5)}` : `${d.slice(0,2)} ${d.slice(2,5)} ${d.slice(5)}`;
 }
+/* ============================================================
+   MAPAS SEGÚN EL DISPOSITIVO (sin obligar a instalar nada)
+   · iPhone / iPad / Mac con Safari → Mapas de Apple (viene en el equipo)
+   · Android → Google Maps (viene en el equipo; si no está, abre la web)
+   · Computador → Google Maps en el navegador
+   ============================================================ */
+const UA = navigator.userAgent;
+const IS_IOS = /iPhone|iPad|iPod/i.test(UA) || (/Macintosh/.test(UA) && navigator.maxTouchPoints > 1);
+const IS_MAC_SAFARI = !IS_IOS && /Macintosh/.test(UA) && /Safari/.test(UA) && !/Chrome|Chromium|CriOS|Edg|OPR|Firefox|FxiOS/.test(UA);
+const IS_APPLE = IS_IOS || IS_MAC_SAFARI;
+const IS_ANDROID = /Android/i.test(UA);
+document.documentElement.classList.add(IS_IOS ? "ios" : IS_ANDROID ? "android" : "desktop");
+const MAPS_APP = IS_APPLE ? "Mapas de Apple" : "Google Maps";
 function mapsHref(url) {
   const m = /q=(-?[\d.]+),(-?[\d.]+)/.exec(url || "");
-  return m ? `https://www.google.com/maps/dir/?api=1&destination=${m[1]},${m[2]}` : url;
+  if (!m) return url;
+  const dest = m[1] + "," + m[2];
+  /* Enlace universal de Apple: abre directamente la app Mapas con la ruta en auto */
+  if (IS_APPLE) return `https://maps.apple.com/?daddr=${dest}&dirflg=d`;
+  /* Enlace universal de Google: en Android abre la app Google Maps; si no está, la web */
+  return `https://www.google.com/maps/dir/?api=1&destination=${dest}`;
 }
+/* En iPhone el enlace de Mapas se abre en la misma pestaña para que iOS lo
+   derive directo a la app (en una pestaña nueva queda una página en blanco) */
+const MAPS_TARGET = IS_IOS ? "" : ' target="_blank" rel="noopener"';
 const ico = id => `<svg class="ico" aria-hidden="true"><use href="#i-${id}"/></svg>`;
 const slug = s => norm(s).replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 const coords = url => { const m = /q=(-?[\d.]+),(-?[\d.]+)/.exec(url || ""); return m ? [+m[1], +m[2]] : null; };
@@ -1772,7 +1796,7 @@ grid.innerHTML = JARDINES.map((j, i) => {
       </span></div></li>
     </ul>
     <div class="actions">
-      <a class="btn btn-primary" href="${esc(mapsHref(j.maps))}" target="_blank" rel="noopener">${ico("route")}Cómo llegar</a>
+      <a class="btn btn-primary" href="${esc(mapsHref(j.maps))}"${MAPS_TARGET} title="Abrir la ruta en ${MAPS_APP}" aria-label="Cómo llegar a ${esc(j.nombre)} (abre ${MAPS_APP})">${ico("route")}Cómo llegar</a>
       ${cel || fono ? `<a class="btn btn-ghost" href="${cel || fono}" aria-label="Llamar a ${esc(j.nombre)}" title="Llamar">${ico("phone")}</a>` : ""}
       <a class="btn btn-ghost" href="mailto:${esc(j.correo)}" aria-label="Escribir a ${esc(j.nombre)}" title="Enviar correo">${ico("mail")}</a>
       <button class="btn btn-ghost" type="button" data-share aria-label="Compartir ${esc(j.nombre)}" title="Compartir">${ico("share")}</button>
